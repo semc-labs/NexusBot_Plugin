@@ -100,4 +100,13 @@ class Nexus_Aurora_Bot_Public {
 
 	}
 
+	
+	function alter_the_content($content){
+		
+		// Replace icons
+		$content = preg_replace("/:(\w+):/", '<img src="'.plugin_dir_url( __FILE__ ).'images/$1.png"  draggable="false" role="img" width="24" alt="$1" />', $content);
+
+		return $content;
+	}
+
 }
