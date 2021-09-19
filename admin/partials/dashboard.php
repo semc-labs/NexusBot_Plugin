@@ -3,6 +3,8 @@
 ?>
 <div class="wrap">
   <h1>Dashboard</h1>
+  <div id="offline" style="display: none;" class="error notice"><p>Bot Offline</p></div>
+  <div id="online" style="display: none;" class="error notice"><p>Bot Online</p></div>
   <div id="container" style="width:100%; height:400px;"></div>
 </div>
 
@@ -12,6 +14,7 @@
     fetch('<?php echo $nexusbot_url; ?>/messages')
     .then(response => response.json())
     .then(series => {
+      document.getElementById('online').style.display = 'block';
 
       Highcharts.chart('container', {
           title: {
@@ -69,6 +72,9 @@
           }
 
           });
+    })
+    .catch((e) => {
+      document.getElementById('offline').style.display = 'block';
     });
 
     
