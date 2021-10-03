@@ -20,6 +20,7 @@ Eventually actions will be able to taken from this admin.
 Many potential future features
 
 == Installation ==
+Download this repo as a zip file and upload it as a New Plugin.
 
 After installing and activating you will need to update the "Nexus_Aurora_Bot_URL" variable in the plugin settings. This is the url the discordbot express server is available at 
 
