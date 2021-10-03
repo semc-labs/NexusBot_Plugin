@@ -69,7 +69,7 @@ class Members_Table extends Nexus_Table
     {
         switch( $column_name ) {
             case 'avatar':
-                return '<img src="'.$item['avatarURL'].'" />';
+                return '<img src="'.$item['avatarURL'].'" width="128" height="128" />';
             case 'id':
             case 'username':
             case 'bot':
