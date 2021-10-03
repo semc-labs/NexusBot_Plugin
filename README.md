@@ -20,6 +20,10 @@ In order for the WordPress bot to post announcements you will need to install th
 
 Then create a user specifically for the bot which has permissions limited to posting. Then make sure to update the .env file with this bot's credentials
 
+You will also need to add a secrect constant to your wp-config.php like: define('JWT_AUTH_SECRET_KEY', 'supersecretstring');
+
+Then add your 'supersecretstring' to your NexusBot .env file
+
 ### Frequently Asked Questions 
 
 *How do I setup the discord bot?*
