@@ -23,9 +23,8 @@ class Members_Table extends Nexus_Table
     {
         $columns = array(
             'avatar' => 'Avatar',
-            'username' 	=> 'Username',
-            'id'        => 'ID',
-            'bot'        => 'Bot',
+            'name' 	=> 'Username',
+            'userId'        => 'ID',
             'status'      => 'Status',
             //'createdTimestamp' => 'Created',
             'roles'       => 'Roles'
@@ -53,8 +52,8 @@ class Members_Table extends Nexus_Table
     {
         $nexusbot_url = get_option('nexusbot_url');
         $request = wp_remote_get($nexusbot_url.'/members');
-  		$channels = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
-        return $channels;
+  		$members = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+        return $members;
     }
 
     /**
@@ -70,10 +69,11 @@ class Members_Table extends Nexus_Table
         switch( $column_name ) {
             case 'avatar':
                 return '<img src="'.$item['avatarURL'].'" width="128" height="128" />';
-            case 'id':
-            case 'username':
-            case 'bot':
+            case 'userId':
+            case 'name':
                 return $item[ $column_name ];
+            case 'bot':
+                return $item[ 'bot' ]?'Yes':'No';
             case 'createdTimestamp':
                 return date('Y-m-d', $item[ $column_name ] / 1000);
         
