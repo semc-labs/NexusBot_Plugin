@@ -1,5 +1,8 @@
 <?php 
   $nexusbot_url = get_option('nexusbot_url');
+
+  $request = wp_remote_get($nexusbot_url.'/messages');
+  $messages = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
 ?>
 <div class="wrap">
   <h1>Dashboard</h1>
@@ -11,26 +14,25 @@
 <script src="https://code.highcharts.com/highcharts.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function () {
-    fetch('<?php echo $nexusbot_url; ?>/messages')
-    .then(response => response.json())
-    .then(series => {
+
+    // fetch('<?php //echo $nexusbot_url; ?>/messages')
+    // .then(response => response.json())
+    // .then(series => {
+      var messages = <?php echo json_encode($messages, JSON_HEX_TAG); ?>;
       document.getElementById('online').style.display = 'block';
 
       Highcharts.chart('container', {
           title: {
             text: 'Channel Messages'
           },
-
           subtitle: {
             text: 'Source: Nexus Aurora Discord'
           },
-
           yAxis: {
             title: {
               text: 'Number of Messages'
             }
           },
-
           xAxis: {
             type: "datetime",
             labels: {
@@ -39,7 +41,6 @@
               }
             }
           },
-
           plotOptions: {
             series: {
               label: {
@@ -47,15 +48,12 @@
               }
             }
           },
-
           legend: {
             layout: 'vertical',
             align: 'right',
             verticalAlign: 'middle'
           },
-
-          series:series,
-
+          series:messages,
           responsive: {
             rules: [{
               condition: {
@@ -70,13 +68,11 @@
               }
             }]
           }
+        });
+    // })
+    // .catch((e) => {
+    //   document.getElementById('offline').style.display = 'block';
+    // });
 
-          });
-    })
-    .catch((e) => {
-      document.getElementById('offline').style.display = 'block';
-    });
-
-    
-    });
+  });
 </script>
