@@ -87,6 +87,7 @@ class Nexus_Aurora_Bot {
 		$this->set_locale();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
+		$this->define_template_hooks();
 
 	}
 
@@ -131,6 +132,12 @@ class Nexus_Aurora_Bot {
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'public/class-nexus-aurora-bot-public.php';
 
+		/**
+		 * The class responsible for all global functions.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/nexus-aurora-global-functions.php';
+
+
 		$this->loader = new Nexus_Aurora_Bot_Loader();
 
 	}
@@ -166,6 +173,12 @@ class Nexus_Aurora_Bot {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_styles' );
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_menu' );
+
+		$this->loader->add_action( 'init', $plugin_admin, 'cpt_file' );
+		$this->loader->add_action( 'init', $plugin_admin, 'file_type' );
+
+		//$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_file_upload_meta_boxes' );
+		$this->loader->add_action( 'upload_mimes', $plugin_admin, 'add_mime_types' );
 	}
 
 	/**
@@ -183,7 +196,45 @@ class Nexus_Aurora_Bot {
 		$this->loader->add_action( 'wp_enqueue_scripts', $plugin_public, 'enqueue_scripts' );
 		$this->loader->add_action( 'the_content', $plugin_public, 'alter_the_content' );
 
+		$this->loader->add_filter( 'single_template', $plugin_public, 'single_cpt_template' );
+
+		
+
 	}
+
+
+	/**
+	 * Register all of the hooks related to the templates.
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function define_template_hooks() {
+
+		// $plugin_templates = new Nexus_Aurora_Template_Functions( $this->get_plugin_name(), $this->get_version() );
+
+		// // Loop
+		// $this->loader->add_action( 'now-hiring-before-loop', $plugin_templates, 'list_wrap_start', 10 );
+		// $this->loader->add_action( 'now-hiring-before-loop-content', $plugin_templates, 'content_wrap_start', 10, 2 );
+		// $this->loader->add_action( 'now-hiring-before-loop-content', $plugin_templates, 'content_link_start', 15, 2 );
+		// $this->loader->add_action( 'now-hiring-loop-content', $plugin_templates, 'content_job_title', 10, 2 );
+		// $this->loader->add_action( 'now-hiring-after-loop-content', $plugin_templates, 'content_link_end', 10, 2 );
+		// $this->loader->add_action( 'now-hiring-after-loop-content', $plugin_templates, 'content_wrap_end', 90, 2 );
+		// $this->loader->add_action( 'now-hiring-after-loop', $plugin_templates, 'list_wrap_end', 10 );
+
+		// // Single
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_title', 10 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_content', 15 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_responsibilities', 20 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_location', 25 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_education', 30 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_skills', 35 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_experience', 40 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_info', 45 );
+		// $this->loader->add_action( 'now-hiring-single-content', $plugin_templates, 'single_post_file', 50 );
+		// $this->loader->add_action( 'now-hiring-after-single', $plugin_templates, 'single_post_how_to_apply', 10 );
+
+	} // define_template_hooks()
 
 	/**
 	 * Run the loader to execute all of the hooks with WordPress.

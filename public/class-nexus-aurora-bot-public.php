@@ -109,4 +109,26 @@ class Nexus_Aurora_Bot_Public {
 		return $content;
 	}
 
+	/**
+	 * Adds a default single view template for a job opening
+	 *
+	 * @param 	string 		$template 		The name of the template
+	 * @return 	mixed 						The single template
+	 */
+	public function single_cpt_template( $template ) {
+
+		global $post;
+
+		$return = $template;
+
+	    if ( $post->post_type == 'file' ) {
+
+			$return = Nexus_Aurora_Globals::get_template( 'single-file' );
+
+		}
+
+		return $return;
+
+	} // single_cpt_template()
+
 }
