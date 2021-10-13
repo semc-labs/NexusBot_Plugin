@@ -1,21 +1,13 @@
 <?php
-
 /**
- * The plugin bootstrap file
- *
- * This file is read by WordPress to generate the plugin information in the plugin
- * admin area. This file also includes all of the dependencies used by the plugin,
- * registers the activation and deactivation functions, and defines a function
- * that starts the plugin.
- *
- * @link              http://jboullion.com
+ * @link              https://nexusaurora.org/
  * @since             0.1.0
- * @package           Nexus_Aurora_Bot
+ * @package           Nexus_Aurora_Plugin
  *
  * @wordpress-plugin
- * Plugin Name:       Nexus Aurora Bot
- * Plugin URI:        http://jboullion.com/nexus-aurora-bot
- * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
+ * Plugin Name:       Nexus Aurora Plugin
+ * Plugin URI:        https://nexusaurora.org/
+ * Description:       This plugin displays stats and admin features for the Nexus Aurora Discord Bot.
  * Version:           0.2.0
  * Author:            James Boullion
  * Author URI:        http://jboullion.com
@@ -33,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'NEXUS_AURORA_BOT_VERSION', '0.1.0' );
+define( 'NEXUS_AURORA_BOT_VERSION', '0.2.0' );
 
 require 'plugin-update-checker/plugin-update-checker.php';
 
