@@ -2,3 +2,18 @@
  * All of the CSS for your public-facing functionality should be
  * included in this file.
  */
+
+.container {
+	max-width: 100%;
+	width: 1400px;
+	margin: 0 auto;
+	padding: 0 15px;
+}
+
+#viewer-wrapper {
+	margin: 20px 0;
+}
+
+.text-center {
+	text-align: center;
+}

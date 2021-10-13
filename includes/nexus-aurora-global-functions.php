@@ -61,4 +61,13 @@ class Nexus_Aurora_Globals {
 
  	} // get_template()
 
+	public static function convert_bytes($bytes, $decimal_places = 1) {
+		$kb = 1024;
+		$mb = 1048576;
+		$gb = 1073741824;
+		if($bytes < $mb) return number_format($bytes / $kb, $decimal_places).'KB';
+		if($bytes < $gb) return number_format($bytes / $mb, $decimal_places).'MB';
+		return number_format($bytes / $gb, $decimal_places).'GB';
+	}
+
 } // class

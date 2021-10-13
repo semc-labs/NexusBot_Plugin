@@ -74,6 +74,7 @@ class Nexus_Aurora_Bot_Public {
 		 */
 
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/nexus-aurora-bot-public.css', array(), $this->version, 'all' );
+		
 
 	}
 
@@ -97,7 +98,7 @@ class Nexus_Aurora_Bot_Public {
 		 */
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/nexus-aurora-bot-public.js', array( 'jquery' ), $this->version, false );
-
+		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/STLLoader.js', array( '' ), $this->version, false );
 	}
 
 	
