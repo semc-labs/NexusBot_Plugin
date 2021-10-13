@@ -35,6 +35,21 @@ if ( ! defined( 'WPINC' ) ) {
  */
 define( 'NEXUS_AURORA_BOT_VERSION', '0.1.0' );
 
+require 'plugin-update-checker/plugin-update-checker.php';
+
+$myUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+	'https://github.com/semc-labs/NexusBot_Plugin/',
+	__FILE__,
+	'nexus-aurora-bot'
+);
+
+//Set the branch that contains the stable release.
+$myUpdateChecker->setBranch('main');
+
+//Optional: If you're using a private repository, specify the access token like this:
+//$myUpdateChecker->setAuthentication('your-token-here');
+
+
 /**
  * The code that runs during plugin activation.
  * This action is documented in includes/class-nexus-aurora-bot-activator.php
