@@ -16,7 +16,7 @@
  * Plugin Name:       Nexus Aurora Bot
  * Plugin URI:        http://jboullion.com/nexus-aurora-bot
  * Description:       This is a short description of what the plugin does. It's displayed in the WordPress admin area.
- * Version:           0.1.0
+ * Version:           0.2.0
  * Author:            James Boullion
  * Author URI:        http://jboullion.com
  * License:           GPL-2.0+
