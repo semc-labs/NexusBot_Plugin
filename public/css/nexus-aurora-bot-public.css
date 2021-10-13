@@ -5,7 +5,7 @@
 
 .container {
 	max-width: 100%;
-	width: 1400px;
+	width: 1200px;
 	margin: 0 auto;
 	padding: 0 15px;
 }
@@ -16,4 +16,45 @@
 
 .text-center {
 	text-align: center;
+}
+
+.logo-button {
+	display: none !important;
+}
+
+.download-list {
+	border: 1px solid #333;
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	margin-bottom: 15px;
+	padding: 10px;
+}
+
+.download-list h4 {
+	flex: 1;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
+.download-list .download-info {
+	display: flex;
+	justify-content: space-between;
+}
+
+.download-list .download-info a,
+.download-list .download-info span {
+	padding: 0 10px;
+}
+
+@media screen and (max-width: 768px) {
+	.download-list {
+		flex-direction: column;
+	}
+
+	.download-list .download-info a,
+	.download-list .download-info span {
+		padding-left: 0px;
+	}
 }
