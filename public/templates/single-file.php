@@ -17,12 +17,14 @@ if(function_exists('get_fields')){
 get_header();
 the_post();
 ?>
-<div class="container">
+<div class="nexus-container">
 
 <?php
-	if(! empty($fields['3d_files'])){
+	echo '<h2 class="text-center">'.$post->post_title.'</h2>';
 
-		echo '<h3>'.$post->post_title.'</h3>';
+	the_content();
+
+	if(! empty($fields['3d_files'])){
 
 		echo '<div id="viewer-wrapper">
 				<babylon id="babylon-viewer"  model="'.$fields['3d_files'][0]['file']['url'].'" templates.main.params.fill-screen="true">
@@ -51,7 +53,9 @@ the_post();
 		// 			</tr>
 		// 		</thead>
 		// 		<tbody>';
-		
+
+		echo '<h3>Available Files</h3>';
+
 		foreach($fields['3d_files'] as $file){
 			// echo '<tr>
 			// 		<td>'.$file['file']['title'].'</td>

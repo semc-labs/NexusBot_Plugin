@@ -3,26 +3,34 @@
  * included in this file.
  */
 
-.container {
+.nexus-container {
 	max-width: 100%;
 	width: 1200px;
 	margin: 0 auto;
 	padding: 0 15px;
 }
 
-#viewer-wrapper {
-	margin: 20px 0;
+.nexus-container h2 {
+	margin-bottom: 30px;
+}
+
+.nexus-container h3 {
+	margin-bottom: 20px;
+}
+
+.nexus-container #viewer-wrapper {
+	margin: 50px 0;
 }
 
 .text-center {
 	text-align: center;
 }
 
-.logo-button {
+.nexus-container .logo-button {
 	display: none !important;
 }
 
-.download-list {
+.nexus-container .download-list {
 	border: 1px solid #333;
 	display: flex;
 	flex-direction: row;
@@ -31,30 +39,30 @@
 	padding: 10px;
 }
 
-.download-list h4 {
+.nexus-container .download-list h4 {
 	flex: 1;
 	text-overflow: ellipsis;
 	white-space: nowrap;
 	overflow: hidden;
 }
 
-.download-list .download-info {
+.nexus-container .download-list .download-info {
 	display: flex;
 	justify-content: space-between;
 }
 
-.download-list .download-info a,
-.download-list .download-info span {
+.nexus-container .download-list .download-info a,
+.nexus-container .download-list .download-info span {
 	padding: 0 10px;
 }
 
 @media screen and (max-width: 768px) {
-	.download-list {
+	.nexus-container .download-list {
 		flex-direction: column;
 	}
 
-	.download-list .download-info a,
-	.download-list .download-info span {
+	.nexus-container .download-list .download-info a,
+	.nexus-container .download-list .download-info span {
 		padding-left: 0px;
 	}
 }
