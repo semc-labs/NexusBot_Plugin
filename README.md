@@ -1,6 +1,6 @@
-# Nexus Aurora Discord Bot
+# Nexus Aurora Plugin
 
-Nexus Aurora Discord Bot administration.
+Nexus Aurora Plugin used for Discord Bot administration and other custom functionality.
 
 ## Description
 This plugin requires our [Discord Bot](https://github.com/semc-labs/NexusBot)
