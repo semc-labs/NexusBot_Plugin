@@ -112,18 +112,27 @@ class Nexus_Aurora_Bot_Public {
 	 * Shortcode for viewing 3D models on the site
 	 *
 	 * @param array $atts An array of attributes used to build the viewer
-	 * @type type $key Description. Default 'value'. Accepts 'value', 'value'.
+	 * @atts[id] The attachment_id of the file to view
 	 * @atts[url] The url of the file to view
 	 * @atts[mtl] mtl file required when viewing an OBJ file
 	 * @return void
 	 */
 	public function na_viewer($atts) {
+		if(! empty($atts['id'])){
+			$atts['url'] = wp_get_attachment_url($atts['id']);
+			$filesize = filesize(get_attached_file($atts['id']));
+		}
+
 		if(empty($atts['url']) || ! filter_var($atts['url'], FILTER_VALIDATE_URL)) return '';
 
-		$headers = get_headers($atts['url'], true);
+		//$headers = get_headers($atts['url'], true);
 
-
-		return '<babylon id="babylon-viewer" class="" model="'.$atts['url'].'" templates.main.params.fill-screen="true">
+		return '<babylon id="babylon-viewer" 
+					class="babylon-viewers" 
+					model="'.$atts['url'].'" 
+					templates.main.params.fill-screen="true"
+					templates.nav-bar.params.hide-vr="true"
+					templates.nav-bar.params.hide-logo="true">
 					<scene debug="false" render-in-background="true" disable-camera-control="false">
 						<main-color r="0.5" g="0.3" b="0.3"></main-color>
 						<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
@@ -137,7 +146,7 @@ class Nexus_Aurora_Bot_Public {
 					</lab>
 				</babylon>
 				<div class="download text-center">
-					<span>'.Nexus_Aurora_Globals::convert_bytes( $headers['Content-Length'] ).'</span>
+					'.($filesize?'<span>'.Nexus_Aurora_Globals::convert_bytes( $filesize ).'</span>':'').'
 					<a href="'.$atts['url'].'" download>Download</a>
 				</div>';
 	}
