@@ -61,18 +61,6 @@ class Nexus_Aurora_Bot_Public {
 	 */
 	public function enqueue_styles() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Nexus_Aurora_Bot_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Nexus_Aurora_Bot_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/nexus-aurora-bot-public.css', array(), $this->version, 'all' );
 		
 
@@ -85,20 +73,8 @@ class Nexus_Aurora_Bot_Public {
 	 */
 	public function enqueue_scripts() {
 
-		/**
-		 * This function is provided for demonstration purposes only.
-		 *
-		 * An instance of this class should be passed to the run() function
-		 * defined in Nexus_Aurora_Bot_Loader as all of the hooks are defined
-		 * in that particular class.
-		 *
-		 * The Nexus_Aurora_Bot_Loader will then create the relationship
-		 * between the defined hooks and the functions defined in this
-		 * class.
-		 */
-
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/nexus-aurora-bot-public.js', array( 'jquery' ), $this->version, false );
-		//wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/STLLoader.js', array( '' ), $this->version, false );
+		wp_enqueue_script( 'babylon', 'https://cdn.babylonjs.com/viewer/babylon.viewer.js', array(), $this->version, false );
 	}
 
 	
@@ -131,5 +107,39 @@ class Nexus_Aurora_Bot_Public {
 		return $return;
 
 	} // single_cpt_template()
+
+	/**
+	 * Shortcode for viewing 3D models on the site
+	 *
+	 * @param array $atts An array of attributes used to build the viewer
+	 * @type type $key Description. Default 'value'. Accepts 'value', 'value'.
+	 * @atts[url] The url of the file to view
+	 * @atts[mtl] mtl file required when viewing an OBJ file
+	 * @return void
+	 */
+	public function na_viewer($atts) {
+		if(empty($atts['url']) || ! filter_var($atts['url'], FILTER_VALIDATE_URL)) return '';
+
+		$headers = get_headers($atts['url'], true);
+
+
+		return '<babylon id="babylon-viewer" class="" model="'.$atts['url'].'" templates.main.params.fill-screen="true">
+					<scene debug="false" render-in-background="true" disable-camera-control="false">
+						<main-color r="0.5" g="0.3" b="0.3"></main-color>
+						<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
+							<color-curves global-hue="5">
+							</color-curves>
+						</image-processing-configuration>
+					</scene>
+					<lab>
+						<default-rendering-pipeline grain-enabled="false" sharpen-enabled="true" glow-layer-enabled="false" bloom-enabled="false" bloom-threshold="2.0">
+						</default-rendering-pipeline>
+					</lab>
+				</babylon>
+				<div class="download text-center">
+					<span>'.Nexus_Aurora_Globals::convert_bytes( $headers['Content-Length'] ).'</span>
+					<a href="'.$atts['url'].'" download>Download</a>
+				</div>';
+	}
 
 }

@@ -42,6 +42,15 @@ class Nexus_Aurora_Bot_Loader {
 	protected $filters;
 
 	/**
+	 * The array of shortcodes registered with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $shortcodes    The shortcodes registered with WordPress to fire when the plugin loads.
+	 */
+	protected $shortcodes;
+
+	/**
 	 * Initialize the collections used to maintain the actions and filters.
 	 *
 	 * @since    1.0.0
@@ -50,6 +59,7 @@ class Nexus_Aurora_Bot_Loader {
 
 		$this->actions = array();
 		$this->filters = array();
+		$this->shortcodes = array();
 
 	}
 
@@ -79,6 +89,22 @@ class Nexus_Aurora_Bot_Loader {
 	 */
 	public function add_filter( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) {
 		$this->filters = $this->add( $this->filters, $hook, $component, $callback, $priority, $accepted_args );
+	}
+
+	/**
+	 * Add a new filter to the collection to be registered with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @param    string               $hook             The name of the WordPress shortcode that is being registered.
+	 * @param    object               $component        A reference to the instance of the object on which the filter is defined.
+	 * @param    string               $callback         The name of the function that creates the shortcode .
+	 */
+	public function add_shortcode( $hook, $component,$callback) {
+		$this->shortcodes[] = [ 
+			'hook'          => $hook,
+			'component'     => $component,
+			'callback'      => $callback,
+		];
 	}
 
 	/**
@@ -122,6 +148,10 @@ class Nexus_Aurora_Bot_Loader {
 
 		foreach ( $this->actions as $hook ) {
 			add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
+		}
+
+		foreach ( $this->shortcodes as $shortcode ) {
+			add_shortcode( $shortcode['hook'], array( $hook['component'], $shortcode['callback'] ) );
 		}
 
 	}

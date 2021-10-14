@@ -26,11 +26,15 @@
 	text-align: center;
 }
 
-.nexus-container .logo-button {
+.babylonjs-canvas .logo-button {
 	display: none !important;
 }
 
 .nexus-container .download-list {
+	margin-bottom: 50px;
+}
+
+.nexus-container .download {
 	border: 1px solid #333;
 	display: flex;
 	flex-direction: row;

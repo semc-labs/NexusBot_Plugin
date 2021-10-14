@@ -56,6 +56,8 @@ the_post();
 
 		echo '<h3>Available Files</h3>';
 
+		echo '<div class="download-list">';
+
 		foreach($fields['3d_files'] as $file){
 			// echo '<tr>
 			// 		<td>'.$file['file']['title'].'</td>
@@ -64,8 +66,8 @@ the_post();
 			// 		<td class="text-center"><a href="'.$file['file']['url'].'" download>Download</a></td>
 			// 	</tr>';
 
-			echo '<div class="download-list">
-					<h4>'.$file['file']['title'].'</h4>
+			echo '<div class="download">
+					<h6>'.$file['file']['title'].'</h6>
 					<div class="download-info">
 						<span>'.Nexus_Aurora_Globals::convert_bytes( $file['file']['filesize'] ).'</span>
 						<a href="'.$file['file']['url'].'" class="view-model" >View</a>
@@ -74,12 +76,13 @@ the_post();
 				</div>';
 		}
 
+		echo '</div>';
+
 		//echo '</tbody></table>';
 
 	}
 ?>
 </div>
-<script src="https://cdn.babylonjs.com/viewer/babylon.viewer.js"></script>
 <script>
 	(function($) {
 		BabylonViewer.viewerManager.getViewerPromiseById('babylon-viewer').then(function (viewer) {
