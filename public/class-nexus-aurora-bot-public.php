@@ -142,7 +142,9 @@ class Nexus_Aurora_Bot_Public {
 					model="'.$atts['url'].'" 
 					templates.main.params.fill-screen="true"
 					templates.nav-bar.params.hide-vr="true"
-					templates.nav-bar.params.hide-logo="true">
+					templates.nav-bar.params.hide-logo="true"
+					templates.loading-screen.params.static-loading-image="https://nexusaurora.org/wp-content/uploads/2021/10/na_spin_logo.gif"
+					templates.loading-screen.params.loading-image="">
 					<scene debug="false" render-in-background="true" disable-camera-control="false">
 						<main-color r="0.5" g="0.3" b="0.3"></main-color>
 						<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
