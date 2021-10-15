@@ -3,6 +3,14 @@
  * included in this file.
  */
 
+.text-center {
+	text-align: center;
+}
+
+.babylon-wrapper {
+	margin-bottom: 30px;
+}
+
 .nexus-container {
 	max-width: 100%;
 	width: 1200px;
@@ -21,14 +29,6 @@
 .nexus-container #viewer-wrapper {
 	margin: 50px 0;
 }
-
-.text-center {
-	text-align: center;
-}
-
-/* .babylon-viewers .logo-button {
-	display: none !important;
-} */
 
 .nexus-container .download-list {
 	margin-bottom: 50px;

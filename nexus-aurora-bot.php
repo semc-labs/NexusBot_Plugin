@@ -8,7 +8,7 @@
  * Plugin Name:       Nexus Aurora Plugin
  * Plugin URI:        https://nexusaurora.org/
  * Description:       This plugin displays stats and admin features for the Nexus Aurora Discord Bot.
- * Version:           0.3.0
+ * Version:           0.3.1
  * Author:            James Boullion
  * Author URI:        http://jboullion.com
  * License:           GPL-2.0+
@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'NEXUS_AURORA_BOT_VERSION', '0.3.0' );
+define( 'NEXUS_AURORA_BOT_VERSION', '0.3.1' );
 
 require 'plugin-update-checker/plugin-update-checker.php';
 

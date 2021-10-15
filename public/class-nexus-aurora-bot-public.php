@@ -137,29 +137,30 @@ class Nexus_Aurora_Bot_Public {
 
 		//$headers = get_headers($atts['url'], true);
 
-		return '<babylon id="babylon-viewer" 
-					class="babylon-viewers" 
-					model="'.$atts['url'].'" 
-					templates.main.params.fill-screen="true"
-					templates.nav-bar.params.hide-vr="true"
-					templates.nav-bar.params.hide-logo="true"
-					templates.loading-screen.params.static-loading-image="https://nexusaurora.org/wp-content/uploads/2021/10/na_spin_logo.gif"
-					templates.loading-screen.params.loading-image="">
-					<scene debug="false" render-in-background="true" disable-camera-control="false">
-						<main-color r="0.5" g="0.3" b="0.3"></main-color>
-						<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
-							<color-curves global-hue="5">
-							</color-curves>
-						</image-processing-configuration>
-					</scene>
-					<lab>
-						<default-rendering-pipeline grain-enabled="false" sharpen-enabled="true" glow-layer-enabled="false" bloom-enabled="false" bloom-threshold="2.0">
-						</default-rendering-pipeline>
-					</lab>
-				</babylon>
-				<div class="download text-center">
-					'.($filesize?'<span>'.Nexus_Aurora_Globals::convert_bytes( $filesize ).'</span>':'').'
-					<a href="'.$atts['url'].'" download>Download</a>
+		return '<div class="babylon-wrapper">
+					<babylon class="babylon-viewers" 
+						model="'.$atts['url'].'" 
+						templates.main.params.fill-screen="true"
+						templates.nav-bar.params.hide-vr="true"
+						templates.nav-bar.params.hide-logo="true"
+						templates.loading-screen.params.static-loading-image="https://nexusaurora.org/wp-content/uploads/2021/10/na_spin_logo.gif"
+						templates.loading-screen.params.loading-image="">
+						<scene debug="false" render-in-background="true" disable-camera-control="false">
+							<main-color r="0.5" g="0.3" b="0.3"></main-color>
+							<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
+								<color-curves global-hue="5">
+								</color-curves>
+							</image-processing-configuration>
+						</scene>
+						<lab>
+							<default-rendering-pipeline grain-enabled="false" sharpen-enabled="true" glow-layer-enabled="false" bloom-enabled="false" bloom-threshold="2.0">
+							</default-rendering-pipeline>
+						</lab>
+					</babylon>
+					<div class="download text-center">
+						'.($filesize?'<span>'.Nexus_Aurora_Globals::convert_bytes( $filesize ).'</span>':'').'
+						<a href="'.$atts['url'].'" download>Download</a>
+					</div>
 				</div>';
 	}
 
