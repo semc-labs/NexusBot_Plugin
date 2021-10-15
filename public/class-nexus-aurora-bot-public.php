@@ -79,10 +79,20 @@ class Nexus_Aurora_Bot_Public {
 
 	
 	function alter_the_content($content){
+		$icon_url = plugin_dir_url( __FILE__ ).'images/icons';
+		$icon_dir = plugin_dir_path( __FILE__ ).'images/icons';
+		$icons = scandir($icon_dir);
 		
-		// Replace icons
-		$content = preg_replace("/ :(\w+): ?/", '<img src="'.plugin_dir_url( __FILE__ ).'images/$1.png"  draggable="false" role="img" width="24" alt="$1" />', $content);
+		if($icons && is_array($icons)){
+			
+			// clean our content by spacing out our icons
+			$content = preg_replace("/:(\D*)::/", ':$1: :', $content);
 
+			foreach($icons as $icon_file){
+				$icon_name = pathinfo($icon_file, PATHINFO_FILENAME);				
+				$content = str_replace(":$icon_name:", '<img src="'.$icon_url.'/'.$icon_file.'"  draggable="false" role="img" width="24" alt="" />', $content);
+			}
+		}
 		return $content;
 	}
 
