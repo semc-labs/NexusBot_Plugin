@@ -35,7 +35,7 @@ class Nexus_Aurora_Bot_Activator {
 
 	protected static function subscribe_table_install() {
 		global $wpdb;
-		$na_db_version = 1.0;
+		$na_db_version = 1.1;
 		
 		$charset_collate = $wpdb->get_charset_collate();
 	

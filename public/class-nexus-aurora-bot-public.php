@@ -164,20 +164,42 @@ class Nexus_Aurora_Bot_Public {
 				</div>';
 	}
 
-
-	public function na_subscribe() {
+	/**
+	 * Generate the subscriber form
+	 *
+	 * @param array $atts An array of attributes used to build the subscribe form
+	 * @atts[show_button] Show the form button
+	 * @return void
+	 */
+	public function na_subscribe($atts = []) {
 		global $post; 
 
+		if(!empty($_POST['subscribe']['email'])) $subscribe_message = $this->subscribe_submission();
+
 		?>
-		<div class="">
-			<form class="na-form" method="post" name="Subscribe Form">
+		<div class="na-subscribe-form">
+			<?php 
+				if( ! empty($subscribe_message['success']) ){
+					echo '<div class="na-alert na-success">'.$subscribe_message['success'].'</div>';
+				}else{
+					if( ! empty($subscribe_message['error']) ){
+						echo '<div class="na-alert na-error">'.$subscribe_message['error'].'</div>';
+					}
+			?>
+			<form 
+				class="na-form" 
+				method="post" 
+				name="Subscribe Form"
+				action="<?php //echo esc_url( admin_url('admin-post.php') ); ?>">
+				<input type="hidden" name="action" value="subscribe_form">
 				<input type="hidden" name="post_id" value="<?php echo $post->ID; ?>">
 
 				<div class="na-input-wrapper">
-					<input size="1" type="email" name="subscribe[email]" id="subscriber-email" class="" placeholder="Email">
-					<button type="submit" class="">Subscribe</button>
+					<input size="1" type="email" name="subscribe[email]" id="subscriber-email" class="" placeholder="Enter Email" value="<?php echo $_POST['subscribe']['email']; ?>">
+					<?php echo empty($atts['show_button']) ? '' : '<button type="submit" class="">Subscribe</button>'; ?>
 				</div>
 			</form>
+			<?php } ?>
 		</div>
 		<?php 
 		/*
@@ -193,6 +215,54 @@ class Nexus_Aurora_Bot_Public {
 			</form>
 		</div>
 		*/
+	}
+
+	/**
+	 * Subscribe a visitor to our newsletter
+	 *
+	 * @return void
+	 */
+	public function subscribe_submission() {
+		global $wpdb;
+		
+		if(empty($_POST['subscribe']['email'])) return;
+
+		if(! filter_var($_POST['subscribe']['email'], FILTER_VALIDATE_EMAIL)) return ['error' => 'Invalid email'];
+
+		$subscriber_email = $_POST['subscribe']['email'];
+
+		$subscriber = $wpdb->get_row($wpdb->prepare("SELECT * FROM na_subscribers WHERE email = %s", $subscriber_email));
+
+		if( !$subscriber ){
+			$result = $wpdb->insert( 
+				'na_subscribers', 
+				array( 
+					'email' => $subscriber_email,
+					'active' => 1,
+					'subscribed_at' => current_time( 'mysql' ),
+				) 
+			);
+
+			if($result){
+				return ['success' => 'Success!'];
+			}
+		}else{
+			$result = $wpdb->update( 
+				'na_subscribers', 
+				array( 
+					'active' => 1
+				),
+				array( 
+					'email' => $subscriber_email,
+				)
+			);
+			
+			if($result){
+				return ['success' => 'Success!']; // 'Already subscribed!'
+			}
+		}
+
+		return ['error' => 'Unable to subscribe'];
 	}
 
 }

@@ -201,6 +201,10 @@ class Nexus_Aurora_Bot {
 		$this->loader->add_shortcode( 'na-viewer',  $plugin_public, 'na_viewer' );
 		$this->loader->add_shortcode( 'na-subscribe',  $plugin_public, 'na_subscribe' );
 
+		$this->loader->add_action( 'admin_post_subscribe_form', $plugin_public, 'subscribe_submission' );
+		$this->loader->add_action( 'admin_post_nopriv_subscribe_form', $plugin_public, 'subscribe_submission' );
+
+
 	}
 
 
