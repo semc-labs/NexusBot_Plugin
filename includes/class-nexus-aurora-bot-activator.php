@@ -42,10 +42,11 @@ class Nexus_Aurora_Bot_Activator {
 		$sql = "CREATE TABLE na_subscribers (
 			subscriber_id INT(11) NOT NULL AUTO_INCREMENT,
 			email VARCHAR(255) NOT NULL,
-			active TINYINT(1) NOT NULL DEFAULT 0,
+			active TINYINT(1) NOT NULL DEFAULT 1,
 			from_discord TINYINT(1) NOT NULL DEFAULT 0,
 			subscribed_at DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
-			PRIMARY KEY  (subscriber_id)
+			PRIMARY KEY  (subscriber_id),
+			UNIQUE KEY `email` (`email`)
 		) $charset_collate;";
 	
 		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );

@@ -30,7 +30,10 @@ class Nexus_Aurora_Bot_Deactivator {
 	 * @since    1.0.0
 	 */
 	public static function deactivate() {
-
+		global $wpdb;
+		
+		// Can uncomment to clear subscriber data when deactivating plugin
+		// $wpdb->query( "DROP TABLE IF EXISTS na_subscribers" );
 	}
 
 }

@@ -94,7 +94,7 @@
 	margin-left: -2px;
 }
 
-.na-subscribe-form .na-alert {
+#na-subscribe-form .na-alert {
 	border-left: 4px solid black;
 	background-color: white;
 	padding: 10px;
@@ -102,10 +102,10 @@
 	width: 100%;
 }
 
-.na-subscribe-form .na-alert.na-error {
+#na-subscribe-form .na-alert.na-error {
 	border-color: #9C2E35;
 }
 
-.na-subscribe-form .na-alert.na-success {
+#na-subscribe-form .na-alert.na-success {
 	border-color: #228B22;
 }

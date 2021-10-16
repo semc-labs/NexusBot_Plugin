@@ -176,32 +176,29 @@ class Nexus_Aurora_Bot_Public {
 
 		if(!empty($_POST['subscribe']['email'])) $subscribe_message = $this->subscribe_submission();
 
-		?>
-		<div class="na-subscribe-form">
-			<?php 
-				if( ! empty($subscribe_message['success']) ){
-					echo '<div class="na-alert na-success">'.$subscribe_message['success'].'</div>';
-				}else{
-					if( ! empty($subscribe_message['error']) ){
-						echo '<div class="na-alert na-error">'.$subscribe_message['error'].'</div>';
-					}
-			?>
-			<form 
-				class="na-form" 
-				method="post" 
-				name="Subscribe Form"
-				action="<?php //echo esc_url( admin_url('admin-post.php') ); ?>">
-				<input type="hidden" name="action" value="subscribe_form">
-				<input type="hidden" name="post_id" value="<?php echo $post->ID; ?>">
+		
+		return '<div id="na-subscribe-form">
+		
+				'.( ! empty($subscribe_message['success']) ? '<div class="na-alert na-success">'.$subscribe_message['success'].'</div>':'').'
+				'.( ! empty($subscribe_message['error']) ? '<div class="na-alert na-error">'.$subscribe_message['error'].'</div>':'').'
+					
+		
+				'.( empty($subscribe_message['success']) ? '
+				<form 
+					class="na-form" 
+					method="post" 
+					name="Subscribe Form"
+					action="#na-subscribe-form">
+					<input type="hidden" name="action" value="subscribe_form">
+					<input type="hidden" name="post_id" value="'.$post->ID.'">
 
 				<div class="na-input-wrapper">
-					<input size="1" type="email" name="subscribe[email]" id="subscriber-email" class="" placeholder="Enter Email" value="<?php echo $_POST['subscribe']['email']; ?>">
-					<?php echo empty($atts['show_button']) ? '' : '<button type="submit" class="">Subscribe</button>'; ?>
+					<input size="1" type="email" name="subscribe[email]" id="subscriber-email" class="" placeholder="Enter Email" value="'.$_POST['subscribe']['email'].'">
+					'.( empty($atts['show_button']) ? '' : '<button type="submit" class="">Subscribe</button>').'
 				</div>
 			</form>
-			<?php } ?>
-		</div>
-		<?php 
+		</div>':'');
+
 		/*
 		<div class="elementor-widget-container">
 			<form class="elementor-form" method="post" name="New Form">
@@ -244,7 +241,7 @@ class Nexus_Aurora_Bot_Public {
 			);
 
 			if($result){
-				return ['success' => 'Success!'];
+				return ['success' => 'You are now subscribed!'];
 			}
 		}else{
 			$result = $wpdb->update( 
@@ -256,10 +253,9 @@ class Nexus_Aurora_Bot_Public {
 					'email' => $subscriber_email,
 				)
 			);
-			
-			if($result){
-				return ['success' => 'Success!']; // 'Already subscribed!'
-			}
+
+			return ['success' => 'You are now subscribed!']; // 'Already subscribed!'
+
 		}
 
 		return ['error' => 'Unable to subscribe'];
