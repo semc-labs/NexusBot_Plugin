@@ -70,3 +70,26 @@
 		padding-left: 0px;
 	}
 }
+
+
+
+/**
+ * Subscribe Form
+ */
+.na-form {
+	
+}
+
+.na-form .na-input-wrapper {
+	width: 100%;
+	display: flex;
+}
+
+.na-form .na-input-wrapper input {
+	width: 100%;
+	flex: 1;
+}
+
+.na-form .na-input-wrapper button {
+	margin-left: -2px;
+}

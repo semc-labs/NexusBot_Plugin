@@ -164,4 +164,35 @@ class Nexus_Aurora_Bot_Public {
 				</div>';
 	}
 
+
+	public function na_subscribe() {
+		global $post; 
+
+		?>
+		<div class="">
+			<form class="na-form" method="post" name="Subscribe Form">
+				<input type="hidden" name="post_id" value="<?php echo $post->ID; ?>">
+
+				<div class="na-input-wrapper">
+					<input size="1" type="email" name="subscribe[email]" id="subscriber-email" class="" placeholder="Email">
+					<button type="submit" class="">Subscribe</button>
+				</div>
+			</form>
+		</div>
+		<?php 
+		/*
+		<div class="elementor-widget-container">
+			<form class="elementor-form" method="post" name="New Form">
+				<input type="hidden" name="post_id" value="1376">
+				
+				<div class="elementor-form-fields-wrapper elementor-labels-above">
+					<div class="elementor-field-type-text elementor-field-group elementor-column elementor-field-group-name elementor-col-100">
+						<input size="1" type="text" name="form_fields[name]" id="form-field-name" class="elementor-field elementor-size-sm  elementor-field-textual" placeholder="Name">
+					</div>
+				</div>
+			</form>
+		</div>
+		*/
+	}
+
 }

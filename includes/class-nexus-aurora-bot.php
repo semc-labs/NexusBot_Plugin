@@ -199,6 +199,7 @@ class Nexus_Aurora_Bot {
 		$this->loader->add_filter( 'single_template', $plugin_public, 'single_cpt_template' );
 
 		$this->loader->add_shortcode( 'na-viewer',  $plugin_public, 'na_viewer' );
+		$this->loader->add_shortcode( 'na-subscribe',  $plugin_public, 'na_subscribe' );
 
 	}
 

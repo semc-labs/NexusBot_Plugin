@@ -30,7 +30,29 @@ class Nexus_Aurora_Bot_Activator {
 	 * @since    1.0.0
 	 */
 	public static function activate() {
-
+		Nexus_Aurora_Bot_Activator::subscribe_table_install();
 	}
+
+	protected static function subscribe_table_install() {
+		global $wpdb;
+		$na_db_version = 1.0;
+		
+		$charset_collate = $wpdb->get_charset_collate();
+	
+		$sql = "CREATE TABLE na_subscribers (
+			subscriber_id INT(11) NOT NULL AUTO_INCREMENT,
+			email VARCHAR(255) NOT NULL,
+			active TINYINT(1) NOT NULL DEFAULT 0,
+			from_discord TINYINT(1) NOT NULL DEFAULT 0,
+			subscribed_at DATETIME DEFAULT '0000-00-00 00:00:00' NOT NULL,
+			PRIMARY KEY  (subscriber_id)
+		) $charset_collate;";
+	
+		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+		dbDelta( $sql );
+	
+		add_option( 'na_db_version', $na_db_version );
+	}
+
 
 }
