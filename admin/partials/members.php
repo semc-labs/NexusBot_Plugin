@@ -51,11 +51,22 @@ class Members_Table extends Nexus_Table
      */
     public function table_data()
     {
-        // $nexusbot_url = get_option('nexusbot_url');
-        // $request = wp_remote_get($nexusbot_url.'/members');
-  		// $members = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+        $nexusbot_url = get_option('nexusbot_url');
+        $request = wp_remote_get($nexusbot_url.'/members');
+  		$members = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
 
-        $members = $this->wpdb->get_results("SELECT * FROM na_members ORDER BY `name` ASC", ARRAY_A);
+        //pre_print($members);
+        // NOTE: Currently not saving user avatars in the DB. Also do not have "Presense"
+        // $members = $this->wpdb->get_results("SELECT * FROM na_members ORDER BY `name` ASC", ARRAY_A);
+        
+        // if(! empty($members)){
+        //     foreach($members as $key => $member) {
+        //         $members[$key]['info'] = json_decode($member['info']);
+        //     }
+        // }
+
+        // pre_print($members);
+
         return $members;
     }
 

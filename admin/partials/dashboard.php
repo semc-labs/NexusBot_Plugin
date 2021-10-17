@@ -14,16 +14,18 @@
   $seriesChannel = [];
   if(! empty($messages)){
     foreach($messages as $message){
-      if( !empty($seriesChannel[$message['channel']]) ) {
+      if( isset($seriesChannel[$message['channel']]) ) {
         $series[$seriesChannel[$message['channel']]]['data'][] = [strtotime($message['date']),intval($message['usageCount'])];
       }else{
+        $seriesChannel[$message['channel']] = count($series);
+        
         $series[] = [
           'name' => $message['channel'],
           'data' => [
             [strtotime($message['date']),intval($message['usageCount'])]
           ]
         ];
-        $seriesChannel[$message['channel']] = count($series)-1;
+        
       }
 
     }
