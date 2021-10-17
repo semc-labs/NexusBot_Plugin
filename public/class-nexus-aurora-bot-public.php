@@ -236,7 +236,8 @@ class Nexus_Aurora_Bot_Public {
 				array( 
 					'email' => $subscriber_email,
 					'active' => 1,
-					'subscribed_at' => current_time( 'mysql' ),
+					'createdAt' => current_time( 'mysql' ),
+					'updatedAt' => current_time( 'mysql' ),
 				) 
 			);
 
@@ -247,7 +248,8 @@ class Nexus_Aurora_Bot_Public {
 			$result = $wpdb->update( 
 				'na_subscribers', 
 				array( 
-					'active' => 1
+					'active' => 1,
+					'updatedAt' => current_time( 'mysql' ),
 				),
 				array( 
 					'email' => $subscriber_email,

@@ -76,8 +76,8 @@ class Nexus_Aurora_Bot {
 	 * @since    1.0.0
 	 */
 	public function __construct() {
-		if ( defined( 'NEXUS_AURORA_BOT_VERSION' ) ) {
-			$this->version = NEXUS_AURORA_BOT_VERSION;
+		if ( defined( 'NEXUS_AURORA_PLUGIN_VERSION' ) ) {
+			$this->version = NEXUS_AURORA_PLUGIN_VERSION;
 		} else {
 			$this->version = '1.0.0';
 		}

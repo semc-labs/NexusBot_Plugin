@@ -7,7 +7,7 @@
  * @wordpress-plugin
  * Plugin Name:       Nexus Aurora Plugin
  * Plugin URI:        https://nexusaurora.org/
- * Description:       This plugin displays stats and admin features for the Nexus Aurora Discord Bot.
+ * Description:       This plugin provides a variety of functionality custom built for the Nexus Aurora website. 
  * Version:           0.3.2
  * Author:            James Boullion
  * Author URI:        http://jboullion.com
@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'NEXUS_AURORA_BOT_VERSION', '0.3.2' );
+define( 'NEXUS_AURORA_PLUGIN_VERSION', '0.3.2' );
 
 require 'plugin-update-checker/plugin-update-checker.php';
 
