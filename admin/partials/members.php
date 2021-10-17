@@ -1,5 +1,6 @@
 <?php 
-  $membersTable = new Members_Table($this->bot_url);
+    global $wpdb;
+  $membersTable = new Members_Table($wpdb);
   $membersTable->prepare_items();
 ?>
 <div class="wrap">
@@ -50,9 +51,11 @@ class Members_Table extends Nexus_Table
      */
     public function table_data()
     {
-        $nexusbot_url = get_option('nexusbot_url');
-        $request = wp_remote_get($nexusbot_url.'/members');
-  		$members = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+        // $nexusbot_url = get_option('nexusbot_url');
+        // $request = wp_remote_get($nexusbot_url.'/members');
+  		// $members = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+
+        $members = $this->wpdb->get_results("SELECT * FROM na_members ORDER BY `name` ASC", ARRAY_A);
         return $members;
     }
 
@@ -74,7 +77,7 @@ class Members_Table extends Nexus_Table
                 return $item[ $column_name ];
             case 'bot':
                 return $item[ 'bot' ]?'Yes':'No';
-            case 'createdTimestamp':
+            case 'createdAt':
                 return date('Y-m-d', $item[ $column_name ] / 1000);
         
             case 'status':

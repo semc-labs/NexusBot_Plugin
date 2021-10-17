@@ -1,5 +1,6 @@
 <?php 
-  $channelTable = new Channel_Table($this->bot_url);
+    global $wpdb;
+  $channelTable = new Channel_Table($wpdb);
   $channelTable->prepare_items();
 ?>
 <div class="wrap">
@@ -22,10 +23,10 @@ class Channel_Table extends Nexus_Table
     public function get_columns()
     {
         $columns = array(
-            'id'       => 'ID',
+            'channelId'       => 'ID',
             'name' 	    => 'Name',
             'type'      => 'Type',
-            'createdTimestamp'   => 'Created',
+            'createdAt'   => 'Created',
         );
 
         return $columns;
@@ -48,9 +49,11 @@ class Channel_Table extends Nexus_Table
      */
     public function table_data()
     {
-        $nexusbot_url = get_option('nexusbot_url');
-        $request = wp_remote_get($nexusbot_url.'/channels');
-        $channels = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+        // $nexusbot_url = get_option('nexusbot_url');
+        // $request = wp_remote_get($nexusbot_url.'/channels');
+        // $channels = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+
+        $channels = $this->wpdb->get_results("SELECT * FROM na_channels ORDER BY `name` ASC", ARRAY_A);
         return $channels;
     }
 
@@ -65,12 +68,12 @@ class Channel_Table extends Nexus_Table
     public function column_default( $item, $column_name )
     {
         switch( $column_name ) {
-            case 'id':
+            case 'channelId':
             case 'name':
             case 'type':
                 return $item[ $column_name ];
-            case 'createdTimestamp':
-                return date('Y-m-d', $item[ $column_name ] / 1000 );
+            case 'createdAt':
+                return date('Y-m-d', $item[ $column_name ] ); // / 1000
 
             default:
                 return print_r( $item, true ) ;

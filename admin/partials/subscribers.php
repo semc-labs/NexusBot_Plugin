@@ -1,6 +1,6 @@
 <?php 
     global $wpdb;
-    $subscribersTable = new Members_Table($wpdb);
+    $subscribersTable = new Subscribers_Table($wpdb);
     $subscribersTable->prepare_items();
 
 ?>
@@ -13,7 +13,7 @@
 /**
  * Create a new table class that will extend the WP_List_Table
  */
-class Members_Table extends Nexus_Table
+class Subscribers_Table extends Nexus_Table
 {
 
     /**

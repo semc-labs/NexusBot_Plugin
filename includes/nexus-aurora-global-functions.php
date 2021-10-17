@@ -70,4 +70,14 @@ class Nexus_Aurora_Globals {
 		return number_format($bytes / $gb, $decimal_places).'GB';
 	}
 
+	public static function in_array_r($needle, $haystack, $strict = false) {
+		foreach ($haystack as $item) {
+			if (($strict ? $item === $needle : $item == $needle) || (is_array($item) && Nexus_Aurora_Globals::in_array_r($needle, $item, $strict))) {
+				return $item;
+			}
+		}
+	
+		return false;
+	}
+
 } // class

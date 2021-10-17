@@ -1,5 +1,6 @@
 <?php 
-  $announcementsTable = new Announcements_Table($this->bot_url);
+    global $wpdb;
+  $announcementsTable = new Announcements_Table($wpdb);
   $announcementsTable->prepare_items();
 ?>
 <div class="wrap">
@@ -22,7 +23,7 @@ class Announcements_Table extends Nexus_Table
     public function get_columns()
     {
         $columns = array(
-            'user'        => 'Author',
+            'name'        => 'Author',
             'content' 	    => 'Content',
             'createdAt'     => 'Created',
         );
@@ -47,10 +48,13 @@ class Announcements_Table extends Nexus_Table
      */
     public function table_data()
     {
-        $nexusbot_url = get_option('nexusbot_url');
-        $request = wp_remote_get($nexusbot_url.'/announcements');
-  		$channels = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
-        return $channels;
+        // $nexusbot_url = get_option('nexusbot_url');
+        // $request = wp_remote_get($nexusbot_url.'/announcements');
+  		// $announcements = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+          
+          $announcements = $this->wpdb->get_results("SELECT naa.*, nam.name FROM na_announcements AS naa
+                                                    LEFT JOIN na_members AS nam ON nam.userId = naa.userId ", ARRAY_A);
+        return $announcements;
     }
 
     /**
@@ -64,8 +68,8 @@ class Announcements_Table extends Nexus_Table
     public function column_default( $item, $column_name )
     {
         switch( $column_name ) {
-            case 'user':
-                return $item[ $column_name ]['name'];
+            case 'name':
+                return $item[ $column_name ];
             case 'content':
                 return apply_filters('the_content',$item[ $column_name ]);
             case 'createdAt':

@@ -3,6 +3,32 @@
 
   $request = wp_remote_get($nexusbot_url.'/messages');
   $messages = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+
+  global $wpdb;
+
+  $messages = $wpdb->get_results("SELECT nam.*, nac.name AS channel FROM na_channel_messages AS nam
+                                  LEFT JOIN na_channels AS nac ON nac.channelId = nam.channelId 
+                                  ORDER BY nac.name ASC", ARRAY_A);
+
+  $series = [];
+  $seriesChannel = [];
+  if(! empty($messages)){
+    foreach($messages as $message){
+      if( !empty($seriesChannel[$message['channel']]) ) {
+        $series[$seriesChannel[$message['channel']]]['data'][] = [strtotime($message['date']),intval($message['usageCount'])];
+      }else{
+        $series[] = [
+          'name' => $message['channel'],
+          'data' => [
+            [strtotime($message['date']),intval($message['usageCount'])]
+          ]
+        ];
+        $seriesChannel[$message['channel']] = count($series)-1;
+      }
+
+    }
+  }
+
 ?>
 <div class="wrap">
   <h1>Dashboard</h1>
@@ -15,11 +41,19 @@
 <script>
   document.addEventListener('DOMContentLoaded', function () {
 
+    fetch('<?php echo $nexusbot_url; ?>')
+    .then(response => response.json())
+    .then(series => {
+      document.getElementById('online').style.display = 'block';
+    })
+    .catch((e) => {
+      document.getElementById('offline').style.display = 'block';
+    });
+
     // fetch('<?php //echo $nexusbot_url; ?>/messages')
     // .then(response => response.json())
     // .then(series => {
-      var messages = <?php echo json_encode($messages, JSON_HEX_TAG); ?>;
-      document.getElementById('online').style.display = 'block';
+      var series = <?php echo json_encode($series, JSON_HEX_TAG); //json_encode($messages, JSON_HEX_TAG); ?>;
 
       Highcharts.chart('container', {
           title: {
@@ -53,7 +87,7 @@
             align: 'right',
             verticalAlign: 'middle'
           },
-          series:messages,
+          series:series,
           responsive: {
             rules: [{
               condition: {
