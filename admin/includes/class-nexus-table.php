@@ -5,11 +5,11 @@
 class Nexus_Table extends WP_List_Table
 {
 
-	public $bot_url = '';
+	public $wpdb = null;
 
-    public function __construct( $bot_url ) {
+    public function __construct( $wpdb ) {
         parent::__construct();
-        $this->bot_url = $bot_url;
+        $this->wpdb = $wpdb;
     }
 	
     /**

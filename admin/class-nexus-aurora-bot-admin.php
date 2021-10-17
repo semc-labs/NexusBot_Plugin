@@ -141,6 +141,14 @@ class Nexus_Aurora_Bot_Admin {
 		);
 		add_submenu_page(
 			'nexus-aurora-bot',
+			'Subscribers',
+			'Subscribers',
+			'manage_options',
+			$this->plugin_name . '-subscribers',
+			array( $this, 'page_subscribers' )
+		);
+		add_submenu_page(
+			'nexus-aurora-bot',
 			'Settings',
 			'Settings',
 			'manage_options',
@@ -163,6 +171,10 @@ class Nexus_Aurora_Bot_Admin {
 
 	public function page_members() {
         include( plugin_dir_path( __FILE__ ) . 'partials/members.php' );
+    }
+
+	public function page_subscribers() {
+        include( plugin_dir_path( __FILE__ ) . 'partials/subscribers.php' );
     }
 
 	public function page_settings() {

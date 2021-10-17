@@ -259,6 +259,8 @@ class Nexus_Aurora_Bot_Public {
 			return ['success' => 'You are now subscribed!']; // 'Already subscribed!'
 
 		}
+		
+		// return ['error' => 'Error: '.$wpdb->last_error];
 
 		return ['error' => 'Unable to subscribe'];
 	}
