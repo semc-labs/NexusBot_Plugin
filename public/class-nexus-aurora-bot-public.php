@@ -74,7 +74,7 @@ class Nexus_Aurora_Bot_Public {
 	public function enqueue_scripts() {
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/nexus-aurora-bot-public.js', array( 'jquery' ), $this->version, false );
-		wp_enqueue_script( 'babylon', 'https://cdn.babylonjs.com/viewer/babylon.viewer.js', array(), $this->version, false );
+		wp_register_script( 'babylon', 'https://cdn.babylonjs.com/viewer/babylon.viewer.js', array(), $this->version, false );
 	}
 
 	
@@ -108,15 +108,74 @@ class Nexus_Aurora_Bot_Public {
 
 		$return = $template;
 
-	    if ( $post->post_type == 'file' ) {
+		if ( $post->post_type == 'project' ) {
 
-			$return = Nexus_Aurora_Globals::get_template( 'single-file' );
+			$return = Nexus_Aurora_Globals::get_template( 'single-project' );
 
 		}
+
+	    // if ( $post->post_type == 'file' ) {
+
+			// 	$return = Nexus_Aurora_Globals::get_template( 'single-file' );
+
+			// }
 
 		return $return;
 
 	} // single_cpt_template()
+
+
+	/**
+	 * Shortcode for viewing a list of Google drive files
+	 *
+	 * @param array $atts An array of attributes used to build the viewer
+	 * @atts[id] The folder ID of the folder to view
+	 * @return void
+	 */
+	public function na_drive_folder($atts) {
+		if(empty($atts['id'])) return;
+
+		return '<iframe src="https://drive.google.com/embeddedfolderview?id='.$atts['id'].'#list" style="width:100%; height:300px; border:0;"></iframe>';
+
+	}
+
+	/**
+	 * Display a discord widget for the server
+	 */
+	public function na_discord($atts){
+		//http://files.3g-gaming.de/scripte/discord/index.html
+// 		$widgetString = <<<EOT
+// 		<script type="text/javascript" src="//cdn.jsdelivr.net/discord-widget/1.0/discord-widget.min.js"></script>
+// 		<script type="text/javascript">
+// 		discordWidget.init({
+// 			serverId: '731855215816343592',
+// 			title: 'Nexus Aurora Discord',
+// 			join: true,
+// 			alphabetical: false,
+// 			theme: 'dark',
+// 			hideChannels: ['🔊meeting-room-voice-1'],
+// 			showAllUsers: true,
+// 			allUsersDefaultState: true,
+// 			showNick: false
+// 		});
+// 		discordWidget.render();
+// 		</script>
+		
+// 		<div class="discord-widget"></div>
+// EOT;
+
+
+// 		return $widgetString;
+		$data = array(
+			'hideChannels' => ['🔊meeting-room-voice-1'],
+			'theme' => 'dark',
+			'id' => '731855215816343592'
+		);
+		$query_vars = http_build_query($data);
+
+		return '<iframe src="https://discord.com/widget?'.$query_vars.'" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>';
+	}
+
 
 	/**
 	 * Shortcode for viewing 3D models on the site
@@ -128,6 +187,8 @@ class Nexus_Aurora_Bot_Public {
 	 * @return void
 	 */
 	public function na_viewer($atts) {
+		wp_enqueue_script( 'babylon');
+		
 		if(! empty($atts['id'])){
 			$atts['url'] = wp_get_attachment_url($atts['id']);
 			$filesize = filesize(get_attached_file($atts['id']));

@@ -174,8 +174,9 @@ class Nexus_Aurora_Bot {
 		$this->loader->add_action( 'admin_enqueue_scripts', $plugin_admin, 'enqueue_scripts' );
 		$this->loader->add_action( 'admin_menu', $plugin_admin, 'add_menu' );
 
-		$this->loader->add_action( 'init', $plugin_admin, 'cpt_file' );
-		$this->loader->add_action( 'init', $plugin_admin, 'file_type' );
+		// $this->loader->add_action( 'init', $plugin_admin, 'cpt_file' );
+		// $this->loader->add_action( 'init', $plugin_admin, 'file_type' );
+		$this->loader->add_action( 'init', $plugin_admin, 'cpt_projects' );
 
 		//$this->loader->add_action( 'add_meta_boxes', $plugin_admin, 'add_file_upload_meta_boxes' );
 		$this->loader->add_action( 'upload_mimes', $plugin_admin, 'add_mime_types' );
@@ -199,6 +200,8 @@ class Nexus_Aurora_Bot {
 		$this->loader->add_filter( 'single_template', $plugin_public, 'single_cpt_template' );
 
 		$this->loader->add_shortcode( 'na-viewer',  $plugin_public, 'na_viewer' );
+		$this->loader->add_shortcode( 'na-drive-folder',  $plugin_public, 'na_drive_folder' );
+		$this->loader->add_shortcode( 'na-discord',  $plugin_public, 'na_discord' );
 		$this->loader->add_shortcode( 'na-subscribe',  $plugin_public, 'na_subscribe' );
 
 		$this->loader->add_action( 'admin_post_subscribe_form', $plugin_public, 'subscribe_submission' );

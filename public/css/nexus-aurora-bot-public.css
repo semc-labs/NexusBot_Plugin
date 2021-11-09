@@ -109,3 +109,25 @@
 #na-subscribe-form .na-alert.na-success {
 	border-color: #228B22;
 }
+
+
+/**
+ * PROJECTS
+ */
+body.single-project .nexus-container {
+	padding-top: 100px;
+}
+
+body.single-project .ast-primary-header-bar {
+	background-color: #000;
+}
+
+body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
+	fill: white;
+}
+
+@media (max-width: 921px){
+	body.single-project .nexus-container {
+		padding-top: 30px;
+	}
+}

@@ -139,14 +139,14 @@ class Nexus_Aurora_Bot_Admin {
 			$this->plugin_name . '-members',
 			array( $this, 'page_members' )
 		);
-		add_submenu_page(
-			'nexus-aurora-bot',
-			'Subscribers',
-			'Subscribers',
-			'manage_options',
-			$this->plugin_name . '-subscribers',
-			array( $this, 'page_subscribers' )
-		);
+		// add_submenu_page(
+		// 	'nexus-aurora-bot',
+		// 	'Subscribers',
+		// 	'Subscribers',
+		// 	'manage_options',
+		// 	$this->plugin_name . '-subscribers',
+		// 	array( $this, 'page_subscribers' )
+		// );
 		add_submenu_page(
 			'nexus-aurora-bot',
 			'Settings',
@@ -188,6 +188,82 @@ class Nexus_Aurora_Bot_Admin {
 		
 		return $mime_types;
 	}
+
+	/**
+	 * Creates a new custom post type
+	 *
+	 * @since 	1.0.0
+	 * @access 	public
+	 * @uses 	register_post_type()
+	 */
+	public static function cpt_projects() {
+
+		$cap_type 	= 'post';
+		$plural 		= 'Projects';
+		$single 		= 'Project';
+		$cpt_name 	= 'project';
+
+		$opts['can_export']								= TRUE;
+		$opts['capability_type']					= $cap_type;
+		$opts['description']							= '';
+		$opts['exclude_from_search']			= FALSE;
+		$opts['has_archive']							= FALSE;
+		$opts['hierarchical']							= TRUE;
+		$opts['map_meta_cap']							= TRUE;
+		$opts['menu_icon']								= 'dashicons-hammer';
+		$opts['menu_position']						= 25;
+		$opts['public']										= TRUE;
+		$opts['publicly_querable']				= TRUE;
+		$opts['query_var']								= TRUE;
+		$opts['register_meta_box_cb']			= '';
+		$opts['rewrite']									= FALSE;
+		$opts['show_in_admin_bar']				= TRUE;
+		$opts['show_in_menu']							= TRUE;
+		$opts['show_in_nav_menu']					= TRUE;
+		$opts['show_ui']									= TRUE;
+		$opts['supports']									= array( 'title', 'editor', 'thumbnail', 'page-attributes' );
+		$opts['taxonomies']								= array();
+
+		$opts['capabilities']['delete_others_posts']	= "delete_others_{$cap_type}s";
+		$opts['capabilities']['delete_post']			= "delete_{$cap_type}";
+		$opts['capabilities']['delete_posts']			= "delete_{$cap_type}s";
+		$opts['capabilities']['delete_private_posts']	= "delete_private_{$cap_type}s";
+		$opts['capabilities']['delete_published_posts']	= "delete_published_{$cap_type}s";
+		$opts['capabilities']['edit_others_posts']		= "edit_others_{$cap_type}s";
+		$opts['capabilities']['edit_post']				= "edit_{$cap_type}";
+		$opts['capabilities']['edit_posts']				= "edit_{$cap_type}s";
+		$opts['capabilities']['edit_private_posts']		= "edit_private_{$cap_type}s";
+		$opts['capabilities']['edit_published_posts']	= "edit_published_{$cap_type}s";
+		$opts['capabilities']['publish_posts']			= "publish_{$cap_type}s";
+		$opts['capabilities']['read_post']				= "read_{$cap_type}";
+		$opts['capabilities']['read_private_posts']		= "read_private_{$cap_type}s";
+
+		$opts['labels']['add_new']						= esc_html__( "Add New {$single}", 'nexus-aurora' );
+		$opts['labels']['add_new_item']					= esc_html__( "Add New {$single}", 'nexus-aurora' );
+		$opts['labels']['all_items']					= esc_html__( $plural, 'nexus-aurora' );
+		$opts['labels']['edit_item']					= esc_html__( "Edit {$single}" , 'nexus-aurora' );
+		$opts['labels']['menu_name']					= esc_html__( $plural, 'nexus-aurora' );
+		$opts['labels']['name']							= esc_html__( $plural, 'nexus-aurora' );
+		$opts['labels']['name_admin_bar']				= esc_html__( $single, 'nexus-aurora' );
+		$opts['labels']['new_item']						= esc_html__( "New {$single}", 'nexus-aurora' );
+		$opts['labels']['not_found']					= esc_html__( "No {$plural} Found", 'nexus-aurora' );
+		$opts['labels']['not_found_in_trash']			= esc_html__( "No {$plural} Found in Trash", 'nexus-aurora' );
+		$opts['labels']['parent_item_colon']			= esc_html__( "Parent {$plural} :", 'nexus-aurora' );
+		$opts['labels']['search_items']					= esc_html__( "Search {$plural}", 'nexus-aurora' );
+		$opts['labels']['singular_name']				= esc_html__( $single, 'nexus-aurora' );
+		$opts['labels']['view_item']					= esc_html__( "View {$single}", 'nexus-aurora' );
+
+		$opts['rewrite']['ep_mask']						= EP_PERMALINK;
+		$opts['rewrite']['feeds']						= FALSE;
+		$opts['rewrite']['pages']						= TRUE;
+		$opts['rewrite']['slug']						= esc_html__( strtolower( $plural ), 'nexus-aurora' );
+		$opts['rewrite']['with_front']					= FALSE;
+
+		$opts = apply_filters( 'nexus-aurora-cpt-options', $opts );
+
+		register_post_type( strtolower( $cpt_name ), $opts );
+
+	} // new_cpt_job()
 	
 
 	/**
