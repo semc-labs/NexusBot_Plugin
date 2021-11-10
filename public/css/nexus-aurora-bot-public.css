@@ -149,31 +149,32 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 
 #na-discord-widget .discord-widget__header {
 	background-color: #7289da;
-	padding: 20px;
+	padding: 10px 20px;
 	display: flex;
 	align-items: center;
 	-ms-flex-negative: 0;
 	flex-shrink: 0;
 }
 
-
 #na-discord-widget .discord-widget__header a {
 	color: #fff;
 	text-decoration: none;
+	display: block;
+}
+
+#na-discord-widget .discord-widget__header .dicord-widget__discord {
 	background: url(/wp-content/plugins/nexus-aurora-bot/public/images/discord/discord.svg) 50% no-repeat;
 	width: 124px;
 	height: 34px;
 	background-size: 124px 34px;
-	display: inline-block;
-	transition: opacity .25s ease-out;
 }
 
-#na-discord-widget span {
+#na-discord-widget .discord-widget__header div {
 	flex: 1;
 	text-align: right;
 }
 
-.discord-widget__body {
+#na-discord-widget .discord-widget__body {
 	background-color: #202225;
 	background-image: url(/wp-content/plugins/nexus-aurora-bot/public/images/discord/left-controllers.png), url(/wp-content/plugins/nexus-aurora-bot/public/images/discord/right-controllers.png);
 	background-size: 200px 180px, 110px 130px;
@@ -181,12 +182,52 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 	background-repeat: no-repeat,no-repeat;
 	flex: 1;
 	box-shadow: 0 1px 0 rgb(0 0 0 / 20%);
-	padding: 20px;
+	padding: 15px;
 	overflow-y: hidden;
-	text-align: center;
+	text-align: left;
 }
 
-.dicord-widget__channel__name{
+#na-discord-widget .discord-widget__channel-messages {
+	max-height: 200px;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+#na-discord-widget .discord-widget__channel-messages__message {
+	display: flex;
+	margin-bottom: 15px;
+}
+
+#na-discord-widget .discord-widget__channel-messages__avatar {
+	padding-right: 10px;
+}
+
+#na-discord-widget .discord-widget__channel-messages__avatar img {
+	border-radius: 50%;
+	width: 40px;
+}
+
+#na-discord-widget .discord-widget__channel-messages__content {
+	display: flex;
+	flex: 1;
+	flex-direction: column;
+}
+
+#na-discord-widget .discord-widget__channel-messages__content strong {
+	font-size: 14px;
+}
+
+#na-discord-widget .discord-widget__channel-messages__content strong span {
+	font-size: 12px;
+	font-weight: normal;
+	opacity: 0.5;
+}
+
+#na-discord-widget .discord-widget__channel-messages__content div{
+	font-size: 12px;
+}
+
+#na-discord-widget .dicord-widget__channel__name{
 	color: #fff;
 	font-weight: 600;
 	font-size: 18px;

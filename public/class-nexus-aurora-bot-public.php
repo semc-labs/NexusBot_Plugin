@@ -141,33 +141,61 @@ class Nexus_Aurora_Bot_Public {
 	 * Display a discord widget for the server
 	 */
 	public function na_discord($atts){
-		$nexusbot_url = get_option('nexusbot_url');
-		$request = wp_remote_get($nexusbot_url.'/online');
-		$members = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+		if(empty($atts['channelid'])) return;
 
-		return '<div id="na-discord-widget">
-							<div class="discord-widget__header">
-								<a href="https://discord.com" target="_blank"></a>
-								<span><strong>'.$members['onlineMembers'].'</strong> Members Online</span>
-							</div>
-							'.(! empty($atts['invite']) ? '
-							<div class="discord-widget__body">
+		$nexusbot_url = get_option('nexusbot_url');
+		$request = wp_remote_get($nexusbot_url.'/online?channelId='.$atts['channelid']);
+		$channelInfo = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+
+		$widgetHeader = '<div class="discord-widget__header">
+											<a class="dicord-widget__discord" href="https://discord.com" target="_blank"></a>
+											<div>
+												<span><strong>'.$channelInfo['onlineMembers'].'</strong> Members Online</span>
+												'.(! empty($atts['invite']) ? '<a class="dicord-widget__join" href="'.$atts['invite'].'">Join Project Channel</a>':'').'
+											</div>
+										</div>';
+
+		$widgetBody = '<div class="discord-widget__body">
 								<div class="discord-widget__channels">
 									<div class="dicord-widget__channel">
-										<a class="dicord-widget__channel__name" href="'.$atts['invite'].'">Join Project Channel</a>
+										<div class="dicord-widget__channel__name">'.$channelInfo['channel']['name'].'</div>
 									</div>
-								</div>
-							</div>':'').'
-						</div>';
+								</div>';
 
-		// $data = array(
-		// 	'hideChannels' => ['🔊meeting-room-voice-1'],
-		// 	'theme' => 'dark',
-		// 	'id' => '731855215816343592'
-		// );
-		// $query_vars = http_build_query($data);
+		if(! empty($channelInfo['messages']['messages'])){
+			$channelInfo['messages']['messages'] = array_reverse($channelInfo['messages']['messages']);
 
-		// <iframe src="https://discord.com/widget?'.$query_vars.'" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>';
+			$widgetBody .= '<div class="discord-widget__channel-messages">';
+
+			foreach($channelInfo['messages']['messages'] as $message){
+				$widgetBody .= '<div class="discord-widget__channel-messages__message">';
+
+				$widgetBody .= '<div class="discord-widget__channel-messages__avatar"><img src="'.$message['avatar'].'" alt=""/></div>';
+				$widgetBody .= '<div class="discord-widget__channel-messages__content">
+													<strong>'.$message['username'].' <span>'.date('F j, Y @ g:ia', strtotime($message['date'])).'</span></strong>
+													<div>'.$message['message'].'</div>
+												</div>';
+
+				$widgetBody .= '</div>';
+			}
+
+			$widgetBody .= '</div>';
+		}
+
+		$widgetBody .= '</div>';
+
+		$widgetHTML = '<div id="na-discord-widget">'.$widgetHeader.$widgetBody.'</div>';
+		
+		$data = array(
+			'hideChannels' => ['🔊meeting-room-voice-1'],
+			'theme' => 'dark',
+			'id' => '731855215816343592'
+		);
+		$query_vars = http_build_query($data);
+
+		$widgetIFrame = '<iframe src="https://discord.com/widget?'.$query_vars.'" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>';
+		
+		return $widgetHTML.$widgetIFrame;
 	}
 
 
