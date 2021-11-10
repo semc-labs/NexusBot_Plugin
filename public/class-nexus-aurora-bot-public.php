@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The public-facing functionality of the plugin.
  *
@@ -110,7 +109,7 @@ class Nexus_Aurora_Bot_Public {
 
 		if ( $post->post_type == 'project' ) {
 
-			$return = Nexus_Aurora_Globals::get_template( 'single-project' );
+			//$return = Nexus_Aurora_Globals::get_template( 'single-project' );
 
 		}
 
@@ -123,7 +122,6 @@ class Nexus_Aurora_Bot_Public {
 		return $return;
 
 	} // single_cpt_template()
-
 
 	/**
 	 * Shortcode for viewing a list of Google drive files
@@ -143,37 +141,33 @@ class Nexus_Aurora_Bot_Public {
 	 * Display a discord widget for the server
 	 */
 	public function na_discord($atts){
-		//http://files.3g-gaming.de/scripte/discord/index.html
-// 		$widgetString = <<<EOT
-// 		<script type="text/javascript" src="//cdn.jsdelivr.net/discord-widget/1.0/discord-widget.min.js"></script>
-// 		<script type="text/javascript">
-// 		discordWidget.init({
-// 			serverId: '731855215816343592',
-// 			title: 'Nexus Aurora Discord',
-// 			join: true,
-// 			alphabetical: false,
-// 			theme: 'dark',
-// 			hideChannels: ['🔊meeting-room-voice-1'],
-// 			showAllUsers: true,
-// 			allUsersDefaultState: true,
-// 			showNick: false
-// 		});
-// 		discordWidget.render();
-// 		</script>
-		
-// 		<div class="discord-widget"></div>
-// EOT;
+		$nexusbot_url = get_option('nexusbot_url');
+		$request = wp_remote_get($nexusbot_url.'/online');
+		$members = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
 
+		return '<div id="na-discord-widget">
+							<div class="discord-widget__header">
+								<a href="https://discord.com" target="_blank"></a>
+								<span><strong>'.$members['onlineMembers'].'</strong> Members Online</span>
+							</div>
+							'.(! empty($atts['invite']) ? '
+							<div class="discord-widget__body">
+								<div class="discord-widget__channels">
+									<div class="dicord-widget__channel">
+										<a class="dicord-widget__channel__name" href="'.$atts['invite'].'">Join Project Channel</a>
+									</div>
+								</div>
+							</div>':'').'
+						</div>';
 
-// 		return $widgetString;
-		$data = array(
-			'hideChannels' => ['🔊meeting-room-voice-1'],
-			'theme' => 'dark',
-			'id' => '731855215816343592'
-		);
-		$query_vars = http_build_query($data);
+		// $data = array(
+		// 	'hideChannels' => ['🔊meeting-room-voice-1'],
+		// 	'theme' => 'dark',
+		// 	'id' => '731855215816343592'
+		// );
+		// $query_vars = http_build_query($data);
 
-		return '<iframe src="https://discord.com/widget?'.$query_vars.'" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>';
+		// <iframe src="https://discord.com/widget?'.$query_vars.'" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>';
 	}
 
 
@@ -223,6 +217,78 @@ class Nexus_Aurora_Bot_Public {
 						<a href="'.$atts['url'].'" download>Download</a>
 					</div>
 				</div>';
+	}
+
+	/**
+	 * Shortcode for viewing 3D models attached to a project
+	 *
+	 * @param array $atts An array of attributes used to build the viewer
+	 * @return void
+	 */
+	public function na_viewer_list($atts) {
+		global $post;
+
+		if(function_exists('get_fields')){
+			$fields = get_fields( $post->ID );
+		}
+
+		if(empty($fields['3d_files'])) return;
+
+		wp_enqueue_script( 'babylon');
+
+		$list_html = '<div id="na-viewer-list">
+			<div id="viewer-wrapper">
+				<babylon id="babylon-viewer"  model="'.$fields['3d_files'][0]['file']['url'].'" templates.main.params.fill-screen="true">
+					<scene debug="false" render-in-background="true" disable-camera-control="false">
+						<main-color r="0.5" g="0.3" b="0.3"></main-color>
+						<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
+							<color-curves global-hue="5">
+							</color-curves>
+						</image-processing-configuration>
+					</scene>
+					<lab>
+						<default-rendering-pipeline grain-enabled="false" sharpen-enabled="true" glow-layer-enabled="false" bloom-enabled="false" bloom-threshold="2.0">
+						</default-rendering-pipeline>
+					</lab>
+				</babylon>
+			</div>';
+
+		$list_html .=  '<h3>Available Files</h3>';
+
+		$list_html .=  '<div class="download-list">';
+
+		foreach($fields['3d_files'] as $file){	
+			$list_html .=  '<div class="download">
+					<h6>'.$file['file']['title'].'</h6>
+					<div class="download-info">
+						<span>'.Nexus_Aurora_Globals::convert_bytes( $file['file']['filesize'] ).'</span>
+						<a href="'.$file['file']['url'].'" class="view-model" >View</a>
+						<a href="'.$file['file']['url'].'" download>Download</a>
+					</div>
+				</div>';
+		}
+
+		$list_html .=  '</div></div>';
+
+		$list_html .= <<<EOT
+<script>
+	(function($) {
+		$(window).on('load', function() {
+			BabylonViewer.viewerManager.getViewerPromiseById('babylon-viewer').then(function (viewer) {
+				$('.view-model').click(function(e){
+					e.preventDefault();
+					
+					viewer.loadModel({
+						url: $(this).attr('href')
+					});
+				});
+			});
+		});
+	})( jQuery );
+</script>
+EOT;
+
+		return $list_html;
 	}
 
 	// /**

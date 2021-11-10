@@ -8,7 +8,7 @@
  * Plugin Name:       Nexus Aurora Plugin
  * Plugin URI:        https://nexusaurora.org/
  * Description:       This plugin provides a variety of functionality custom built for the Nexus Aurora website. 
- * Version:           0.3.3
+ * Version:           0.3.4
  * Author:            James Boullion
  * Author URI:        http://jboullion.com
  * License:           GPL-2.0+
