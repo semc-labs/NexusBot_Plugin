@@ -158,12 +158,12 @@ class Nexus_Aurora_Bot_Public {
 		$widgetBody = '<div class="discord-widget__body">
 								<div class="discord-widget__channels">
 									<div class="dicord-widget__channel">
-										<div class="dicord-widget__channel__name">'.$channelInfo['channel']['name'].'</div>
+										<div class="dicord-widget__channel__name">'.$channelInfo['messages']['channel'].'</div>
 									</div>
 								</div>';
 
 		if(! empty($channelInfo['messages']['messages'])){
-			$channelInfo['messages']['messages'] = array_reverse($channelInfo['messages']['messages']);
+			//$channelInfo['messages']['messages'] = array_reverse($channelInfo['messages']['messages']);
 
 			$widgetBody .= '<div class="discord-widget__channel-messages">';
 
@@ -266,7 +266,13 @@ class Nexus_Aurora_Bot_Public {
 
 		$list_html = '<div id="na-viewer-list">
 			<div id="viewer-wrapper">
-				<babylon id="babylon-viewer"  model="'.$fields['3d_files'][0]['file']['url'].'" templates.main.params.fill-screen="true">
+				<babylon id="babylon-viewer" 
+				model="'.$fields['3d_files'][0]['file']['url'].'" 
+				templates.main.params.fill-screen="true"
+						templates.nav-bar.params.hide-vr="true"
+						templates.nav-bar.params.hide-logo="true"
+						templates.loading-screen.params.static-loading-image="https://nexusaurora.org/wp-content/uploads/2021/10/na_spin_logo.gif"
+						templates.loading-screen.params.loading-image="">
 					<scene debug="false" render-in-background="true" disable-camera-control="false">
 						<main-color r="0.5" g="0.3" b="0.3"></main-color>
 						<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
