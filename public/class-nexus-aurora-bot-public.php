@@ -169,12 +169,12 @@ class Nexus_Aurora_Bot_Public {
 		$add_apple_calendar = 'webcal://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
 		$add_google_calendar = 'https://calendar.google.com/calendar/render?cid=https://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
 		
-		$plugin_url = plugin_dir_path( __FILE__ );
-		$apple_svg = include $plugin_url . 'images/fontawesome/apple-brands.php';
-		$google_svg = include $plugin_url . 'images/fontawesome/google-brands.php';
-		$download_svg = include $plugin_url . 'images/fontawesome/download-solid.php';
-		$clock_svg = include $plugin_url . 'images/fontawesome/clock-regular.php';
-		$marker_svg = include $plugin_url . 'images/fontawesome/map-marker-regular.php';
+		//$plugin_url = plugin_dir_path( __FILE__ );
+		$apple_svg = '<i class="fab fa-fw fa-apple"></i>';// include $plugin_url . 'images/fontawesome/apple-brands.php';
+		$google_svg = '<i class="fab fa-fw fa-google"></i>';// include $plugin_url . 'images/fontawesome/google-brands.php';
+		$download_svg = '<i class="fas fa-fw fa-download"></i>';// include $plugin_url . 'images/fontawesome/download-solid.php';
+		$clock_svg = '<i class="fas fa-fw fa-clock"></i>';// include $plugin_url . 'images/fontawesome/clock-regular.php';
+		$marker_svg = '<i class="fas fa-fw fa-map-marker"></i>';// include $plugin_url . 'images/fontawesome/map-marker-regular.php';
 
 		
 
