@@ -145,7 +145,7 @@ class Nexus_Aurora_Bot_Public {
 	 * @atts[apkikey] ??? The apikey connected to the email address to authorize querying events. 
 	 * @atts[q] Query string to search events by
 	 * TODO: Implement the apikey differently. If all events are from one calendar, set that calednars API globally
-	 * 
+	 * ? NOTE: Possibly pass in a "calendar" name which can match an array of API Keys if we have multiple calendars 
 	 * @link https://developers.google.com/calendar/api/v3/reference/events/list
 	 */
  	public function na_calendar($atts) {
@@ -169,10 +169,15 @@ class Nexus_Aurora_Bot_Public {
 		$add_apple_calendar = 'webcal://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
 		$add_google_calendar = 'https://calendar.google.com/calendar/render?cid=https://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
 		
-		$plugin_url = plugin_dir_url( __FILE__ );
-		$apple_svg = $plugin_url . 'images/fontawesome/apple-brands.svg';
-		$google_svg = $plugin_url . 'images/fontawesome/google-brands.svg';
-		$download_svg = $plugin_url . 'images/fontawesome/download-solid.svg';
+		$plugin_url = plugin_dir_path( __FILE__ );
+		$apple_svg = include $plugin_url . 'images/fontawesome/apple-brands.php';
+		$google_svg = include $plugin_url . 'images/fontawesome/google-brands.php';
+		$download_svg = include $plugin_url . 'images/fontawesome/download-solid.php';
+		$clock_svg = include $plugin_url . 'images/fontawesome/clock-regular.php';
+		$marker_svg = include $plugin_url . 'images/fontawesome/map-marker-regular.php';
+
+		
+
 		$calender_image = 'https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_10_2x.png';
 
 		$request = wp_remote_get($calendar_link);
@@ -185,9 +190,9 @@ class Nexus_Aurora_Bot_Public {
 												<img src="'.$calender_image.'" alt="Google Calendar"/> Calendar
 											</a>
 											<div class="calendar-widget__integrate">
-												<a class="calendar-widget__google" href="'.$add_google_calendar.'" target="_blank"><img src="'.$google_svg.'" alt=""/> Add to Google</a>
-												<a class="calendar-widget__apple" href="'.$add_apple_calendar.'" target="_blank"><img src="'.$apple_svg.'" alt=""/> Add to Apple</a>
-												<a class="calendar-widget__ical" href="'.$ics_link.'" download><img src="'.$download_svg.'" alt=""/> Download</a>
+												<a class="calendar-widget__google" href="'.$add_google_calendar.'" target="_blank">'.$google_svg.' Add to Google</a>
+												<a class="calendar-widget__apple" href="'.$add_apple_calendar.'" target="_blank">'.$apple_svg.' Add to Apple</a>
+												<a class="calendar-widget__ical" href="'.$ics_link.'" download>'.$download_svg.' Download</a>
 											</div>
 										</div>';
 
@@ -197,30 +202,45 @@ class Nexus_Aurora_Bot_Public {
 		if(! empty($event_info['items'])){
 
 			foreach($event_info['items'] as $event){
-				$widgetBody .= '<div class="calendar-widget__event">';
+				$widgetBody .= '<a href="'.$event['htmlLink'].'" target="_blank" class="calendar-widget__event">';
 				
 				// Attempt to convert event to users local time
 				if ($user_location['timezone']) {
 					$timezone = new DateTimeZone( $user_location['timezone']);
-					$start_time = new DateTime( $event['start']['dateTime']); 
-					$start_time->setTimezone($timezone);
-					$end_time = new DateTime( $event['end']['dateTime']); 
-					$end_time->setTimezone($timezone);
+					if(! empty($event['start']['date'])){
+						$start_time = new DateTime( $event['start']['date']); 
+						$start_time = $start_time->setTimezone($timezone)->format('F j, Y');
+						$end_time = 'All Day';
+					}else{
+						$start_time = new DateTime( $event['start']['dateTime']); 
+						$start_time = $start_time->setTimezone($timezone)->format('F j, Y g:ia');
+						$end_time = new DateTime( $event['end']['dateTime']); 
+						$end_time = $end_time->setTimezone($timezone)->format('F j, Y g:ia');
+					}
+					
 				}else{
-					$start_time = date('F j, Y @ g:ia', strtotime($event['start']['dateTime']));
-					$end_time = date('F j, Y @ g:ia', strtotime($event['end']['dateTime']));
+					if(! empty($event['start']['date'])){
+						$start_time = date('F j, Y', strtotime($event['start']['date']));
+						$end_time = 'All Day';
+					}else{
+						$start_time = date('F j, Y g:ia', strtotime($event['start']['dateTime']));
+						$end_time = date('F j, Y g:ia', strtotime($event['end']['dateTime']));
+					}
+				}
+
+				if(date('F j, Y', strtotime($start_time)) === date('F j, Y', strtotime($end_time))) {
+					// If NOT an all day event, but the event ends the same day it begins, ONLY show the end time.
+					$end_time = date('g:ia', strtotime($end_time));
 				}
 
 				//$widgetBody .= '<div class="calendar-widget__event__avatar"><img src="'.$message['avatar'].'" alt=""/></div>';
-				$widgetBody .= '<a href="'.$event['htmlLink'].'" target="_blank">
-													<strong class="event-title">'.$event['summary'].'</strong>
-													<div class="event-date">'.$start_time->format('F j, Y @ g:ia').' - '.$end_time->format('F j, Y @ g:ia').'</div>
-													'.($event['location']?'<div class="event-location">'.$event['location'].'</div>':'').'
-													'.($event['description']?'<div class="event-description">'.$event['description'].'</div>':'').'
-													
-												</a>';
+				$widgetBody .= '<strong class="event-title">'.$event['summary'].'</strong>
+												<div class="event-date">'.$clock_svg.' '.$start_time.' - '.$end_time.'</div>
+												'.($event['location']?'<div class="event-location">'.$marker_svg.' '.$event['location'].'</div>':'').'
+												';
+				// '.($event['description']?'<div class="event-description">'.$event['description'].'</div>':'');
 
-				$widgetBody .= '</div>';
+				$widgetBody .= '</a>';
 			}
 
 		}

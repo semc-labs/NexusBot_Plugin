@@ -272,7 +272,7 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 	justify-content: flex-end;
 }
 
-#na-calendar-widget .calendar-widget__integrate img {
+#na-calendar-widget .calendar-widget__integrate svg {
 	margin-right: 10px;
 	width: 20px;
 }
@@ -298,6 +298,17 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 #na-calendar-widget .calendar-widget__event {
 	padding: 10px;
 	border-bottom: 1px solid #5f6368;
+	display: block;
+}
+
+#na-calendar-widget .calendar-widget__event div {
+	display: flex;
+	align-items: center;
+}
+
+#na-calendar-widget .calendar-widget__event svg {
+	width: 14px;
+	margin-right: 10px;
 }
 
 #na-calendar-widget .calendar-widget__event:last-child {
@@ -309,7 +320,7 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 }
 
 #na-calendar-widget .calendar-widget__event  .event-date {
-	font-size: 12px;
+	font-size: 14px;
 }
 
 #na-calendar-widget .calendar-widget__event  .event-description {
@@ -317,7 +328,7 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 }
 
 #na-calendar-widget .calendar-widget__event  .event-location {
-	font-size: 12px;
+	font-size: 14px;
 }
 
 @media screen and (max-width: 768px) {

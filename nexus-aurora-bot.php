@@ -8,7 +8,7 @@
  * Plugin Name:       Nexus Aurora Plugin
  * Plugin URI:        https://nexusaurora.org/
  * Description:       This plugin provides a variety of functionality custom built for the Nexus Aurora website. 
- * Version:           0.3.5
+ * Version:           0.3.6
  * Author:            James Boullion
  * Author URI:        http://jboullion.com
  * License:           GPL-2.0+
@@ -25,7 +25,7 @@ if ( ! defined( 'WPINC' ) ) {
 /**
  * Currently plugin version.
  */
-define( 'NEXUS_AURORA_PLUGIN_VERSION', '0.3.5' );
+define( 'NEXUS_AURORA_PLUGIN_VERSION', '0.3.6' );
 
 require 'plugin-update-checker/plugin-update-checker.php';
 
