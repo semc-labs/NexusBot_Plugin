@@ -138,7 +138,126 @@ class Nexus_Aurora_Bot_Public {
 	}
 
 	/**
+	 * Display a Google Calendar Widger
+	 * 
+	 * @param array $atts An array of attributes used to build the viewer
+	 * @atts[calendarid] The calendar id of the calendar get events from. aka the email address
+	 * @atts[apkikey] ??? The apikey connected to the email address to authorize querying events. 
+	 * @atts[q] Query string to search events by
+	 * TODO: Implement the apikey differently. If all events are from one calendar, set that calednars API globally
+	 * 
+	 * @link https://developers.google.com/calendar/api/v3/reference/events/list
+	 */
+ 	public function na_calendar($atts) {
+
+		if(empty($atts['calendarid'])
+		|| empty($atts['apikey'])) return;
+
+		// Move these to a safe location OR have them set in the $atts? Not very safe that way, but much more configurable.
+		// Could potentially also set an API Key in an ACF field...not much safer
+		$calendar_id = $atts['calendarid'];
+		$api_key = $atts['apikey'];
+		$today = date("Y-m-d\TH:i:s\Z"); // NOTE: In testing I could only get this to work by passing "Z" as the timezone.
+
+		$calendar_link = 'https://www.googleapis.com/calendar/v3/calendars/'.$calendar_id.'/events?maxResults=10&orderBy=startTime&singleEvents=true&timeMin='.$today.'&key='.$api_key;
+		
+		if($atts['search']) {
+			$calendar_link .= "&q=".$atts['search'];
+		}
+		
+		$ics_link = 'https://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
+		$add_apple_calendar = 'webcal://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
+		$add_google_calendar = 'https://calendar.google.com/calendar/render?cid=https://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
+		
+		$plugin_url = plugin_dir_url( __FILE__ );
+		$apple_svg = $plugin_url . 'images/fontawesome/apple-brands.svg';
+		$google_svg = $plugin_url . 'images/fontawesome/google-brands.svg';
+		$download_svg = $plugin_url . 'images/fontawesome/download-solid.svg';
+		$calender_image = 'https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_10_2x.png';
+
+		$request = wp_remote_get($calendar_link);
+		$event_info = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+
+		$user_location = $this->get_user_location();
+
+		$widgetHeader = '<div class="calendar-widget__header">
+											<a class="calendar-widget__google-link" href="https://calendar.google.com/" target="_blank">
+												<img src="'.$calender_image.'" alt="Google Calendar"/> Calendar
+											</a>
+											<div class="calendar-widget__integrate">
+												<a class="calendar-widget__google" href="'.$add_google_calendar.'" target="_blank"><img src="'.$google_svg.'" alt=""/> Add to Google</a>
+												<a class="calendar-widget__apple" href="'.$add_apple_calendar.'" target="_blank"><img src="'.$apple_svg.'" alt=""/> Add to Apple</a>
+												<a class="calendar-widget__ical" href="'.$ics_link.'" download><img src="'.$download_svg.'" alt=""/> Download</a>
+											</div>
+										</div>';
+
+		$widgetBody = '<div class="calendar-widget__body">
+										<div class="calendar-widget__events">';
+
+		if(! empty($event_info['items'])){
+
+			foreach($event_info['items'] as $event){
+				$widgetBody .= '<div class="calendar-widget__event">';
+				
+				// Attempt to convert event to users local time
+				if ($user_location['timezone']) {
+					$timezone = new DateTimeZone( $user_location['timezone']);
+					$start_time = new DateTime( $event['start']['dateTime']); 
+					$start_time->setTimezone($timezone);
+					$end_time = new DateTime( $event['end']['dateTime']); 
+					$end_time->setTimezone($timezone);
+				}else{
+					$start_time = date('F j, Y @ g:ia', strtotime($event['start']['dateTime']));
+					$end_time = date('F j, Y @ g:ia', strtotime($event['end']['dateTime']));
+				}
+
+				//$widgetBody .= '<div class="calendar-widget__event__avatar"><img src="'.$message['avatar'].'" alt=""/></div>';
+				$widgetBody .= '<a href="'.$event['htmlLink'].'" target="_blank">
+													<strong class="event-title">'.$event['summary'].'</strong>
+													<div class="event-date">'.$start_time->format('F j, Y @ g:ia').' - '.$end_time->format('F j, Y @ g:ia').'</div>
+													'.($event['location']?'<div class="event-location">'.$event['location'].'</div>':'').'
+													'.($event['description']?'<div class="event-description">'.$event['description'].'</div>':'').'
+													
+												</a>';
+
+				$widgetBody .= '</div>';
+			}
+
+		}
+
+		$widgetBody .= '</div></div>';
+
+		$widgetHTML = '<div id="na-calendar-widget">'.$widgetHeader.$widgetBody.'</div>';
+
+		return $widgetHTML;
+
+		// Iframes, not great, but kind of work
+		//return THIS IS A TRIAL / PAID SERVICE '<iframe src="https://feed.mikle.com/widget/v2/150927/?preloader-text=Loading" height="230px" width="100%" class="fw-iframe" scrolling="no" frameborder="0"></iframe>';
+		//return '<iframe src="https://calendar.google.com/calendar/embed?height=600&wkst=1&bgcolor=%23ffffff&ctz=America%2FChicago&showTitle=0&showPrint=0&showCalendars=0&src=amJvdWxsaW9uODVAZ21haWwuY29t&src=YWRkcmVzc2Jvb2sjY29udGFjdHNAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&src=ZW4udXNhI2hvbGlkYXlAZ3JvdXAudi5jYWxlbmRhci5nb29nbGUuY29t&color=%237986CB&color=%2333B679&color=%230B8043" style="border:solid 1px #777" width="800" height="600" frameborder="0" scrolling="no"></iframe>';
+ 	}
+
+	/**
+	 * Attempt to get the users location info, including timezone 
+	 * 
+	 * ! NOTE: I don't love this. But other solutions will involve JS. Which we could do if needed. 
+	 */
+	public function get_user_location(){
+		$ip     = $_SERVER['REMOTE_ADDR']; 
+		if($ip === '127.0.0.1'){
+			// for local testing let's just assume a default IP
+			$ip = '69.131.85.114';
+		}
+		$json   = file_get_contents( 'http://ip-api.com/json/' . $ip);
+		return json_decode( $json, true);
+	 }
+
+
+	/**
 	 * Display a discord widget for the server
+	 * 
+	 * @param array $atts An array of attributes used to build the viewer
+	 * @atts[channelid] The channelid of the discord channel to get messages from
+	 * @atts[invite] The url invite link to the channel / server
 	 */
 	public function na_discord($atts){
 		if(empty($atts['channelid'])) return;

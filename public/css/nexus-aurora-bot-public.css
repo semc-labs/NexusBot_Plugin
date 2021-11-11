@@ -233,3 +233,105 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 	font-size: 18px;
 	margin-bottom: 12px;
 }
+
+
+/**
+ * Calendar Widget
+ */
+#na-calendar-widget {
+	border: 1px solid #5f6368;
+	border-radius: 5px;
+	overflow: hidden;
+	font-family: Arial,sans-serif; /* Whitney,Helvetica Neue,Helvetica */
+	color: #5f6368;
+	margin-bottom: 20px;
+}
+
+#na-calendar-widget .calendar-widget__header {
+	border-bottom: 1px solid #5f6368;
+	padding: 10px 20px 10px 15px;
+	display: flex;
+	align-items: center;
+	flex-shrink: 0;
+}
+
+#na-calendar-widget .calendar-widget__google-link {
+	font-size: 22px;
+  line-height: 24px;
+}
+
+
+#na-calendar-widget .calendar-widget__header img {
+	width: 50px;
+}
+
+#na-calendar-widget .calendar-widget__integrate {
+	display: flex;
+	align-items: center;
+	flex: 1;
+	justify-content: flex-end;
+}
+
+#na-calendar-widget .calendar-widget__integrate img {
+	margin-right: 10px;
+	width: 20px;
+}
+
+#na-calendar-widget .calendar-widget__integrate a {
+	color: #5f6368;
+	text-decoration: none;
+	display: flex;
+	padding-left: 15px;
+	align-items: center;
+}
+
+#na-calendar-widget .calendar-widget__body {
+	padding: 10px;
+}
+
+#na-calendar-widget .calendar-widget__events {
+	max-height: 300px;
+	overflow-x: hidden;
+	overflow-y: auto;
+}
+
+#na-calendar-widget .calendar-widget__event {
+	padding: 10px;
+	border-bottom: 1px solid #5f6368;
+}
+
+#na-calendar-widget .calendar-widget__event:last-child {
+	border-bottom: 0;
+}
+
+#na-calendar-widget .calendar-widget__event .event-title {
+
+}
+
+#na-calendar-widget .calendar-widget__event  .event-date {
+	font-size: 12px;
+}
+
+#na-calendar-widget .calendar-widget__event  .event-description {
+
+}
+
+#na-calendar-widget .calendar-widget__event  .event-location {
+	font-size: 12px;
+}
+
+@media screen and (max-width: 768px) {
+	#na-calendar-widget .calendar-widget__header {
+		flex-direction: column;
+	}
+
+	#na-calendar-widget .calendar-widget__integrate {
+		align-items: baseline;
+	}
+
+	#na-calendar-widget .calendar-widget__integrate a {
+		padding: 10px;
+		display: flex;
+		flex-direction: column;
+	}
+}
