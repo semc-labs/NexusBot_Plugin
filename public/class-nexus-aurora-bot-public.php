@@ -207,8 +207,8 @@ class Nexus_Aurora_Bot_Public {
 				// Attempt to convert event to users local time
 				if ($user_location['timezone']) {
 					$timezone = new DateTimeZone( $user_location['timezone']);
-					if(! empty($event['start']['date'])){
-						$start_time = new DateTime( $event['start']['date']); 
+					if(! empty($event['end']['date'])){
+						$start_time = new DateTime( $event['end']['date']); 
 						$start_time = $start_time->setTimezone($timezone)->format('F j, Y');
 						$end_time = 'All Day';
 					}else{
@@ -219,8 +219,8 @@ class Nexus_Aurora_Bot_Public {
 					}
 					
 				}else{
-					if(! empty($event['start']['date'])){
-						$start_time = date('F j, Y', strtotime($event['start']['date']));
+					if(! empty($event['end']['date'])){
+						$start_time = date('F j, Y', strtotime($event['end']['date']));
 						$end_time = 'All Day';
 					}else{
 						$start_time = date('F j, Y g:ia', strtotime($event['start']['dateTime']));
