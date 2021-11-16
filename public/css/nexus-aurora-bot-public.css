@@ -92,17 +92,18 @@
 #nexus-header {
 	position: absolute;
 	left: 0;
-	top: 10px;
+	top: 0;
 	width: 100%;
 }
 
 #nexus-header .nexus-container {
-	padding: 0 15px;
+	padding: 0 20px;
 	display: flex;
+	align-items: center;
 }
 
-#nexus-header img {
-	margin: 10px 0;
+#nexus-header .custom-logo {
+	padding: 1em 0;
 }
 
 #nexus-header #menu-main {
@@ -116,7 +117,8 @@
 
 #nexus-header #menu-main li a {
 	font-family: 'Montserrat',sans-serif;
-	line-height: 76px;
+	font-weight: bold;
+	line-height: 70px;
 	color: white;
 	display: block;
 	padding: 0 1em;
