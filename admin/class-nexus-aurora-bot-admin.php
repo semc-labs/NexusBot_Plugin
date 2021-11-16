@@ -207,7 +207,7 @@ class Nexus_Aurora_Bot_Admin {
 		$opts['capability_type']					= $cap_type;
 		$opts['description']							= '';
 		$opts['exclude_from_search']			= FALSE;
-		$opts['has_archive']							= FALSE;
+		$opts['has_archive']							= TRUE;
 		$opts['hierarchical']							= TRUE;
 		$opts['map_meta_cap']							= TRUE;
 		$opts['menu_icon']								= 'dashicons-hammer';

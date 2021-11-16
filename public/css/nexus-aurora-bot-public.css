@@ -7,26 +7,91 @@
 	text-align: center;
 }
 
+.site-content {
+	position: relative;
+}
+
+.cover-background {
+	background-position: center;
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
+}
+
 .babylon-wrapper {
 	margin-bottom: 30px;
 }
 
 .nexus-container {
 	max-width: 100%;
-	width: 1200px;
 	margin: 0 auto;
 	padding: 0 15px;
 }
 
-.nexus-container h2 {
-	margin-bottom: 30px;
+@media (min-width: 922px){
+	.nexus-container {
+			max-width: 1240px;
+	}
 }
 
-.nexus-container h3 {
-	margin-bottom: 20px;
+
+/**
+ * NEXUS HEADER
+ */
+
+#nexus-header {
+	position: absolute;
+	left: 0;
+	top: 10px;
+	width: 100%;
+}
+
+#nexus-header .nexus-container {
+	padding: 0 15px;
+	display: flex;
+}
+
+#nexus-header img {
+	margin: 10px 0;
+}
+
+#nexus-header #menu-main {
+	display: flex;
+	background-color: black;
+	list-style: none;
+	margin: 0;
+	margin-left: auto;
+	justify-content: flex-end;
+}
+
+#nexus-header #menu-main li a {
+	font-family: 'Montserrat',sans-serif;
+	line-height: 76px;
+	color: white;
+	display: block;
+	padding: 0 1em;
 }
 
 
+/**
+ * NEXUS FEATURED
+ */
+#nexus-featured {
+	height: 430px;
+}
+
+#nexus-featured h1 {
+	color: #FFFFFF;
+	font-family: "Montserrat", Sans-serif;
+	font-weight: 500;
+}
+
+#nexus-featured .nexus-container {
+	display: flex;
+	justify-content: center;
+	flex-direction: column;
+	height: 100%;
+}
 
 /**
  * Subscribe Form
@@ -69,9 +134,7 @@
 /**
  * PROJECTS
  */
-body.single-project .nexus-container {
-	padding-top: 100px;
-}
+
 
 body.single-project .ast-primary-header-bar {
 	/*background-color: #000;*/
@@ -82,9 +145,7 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 }
 
 @media (max-width: 921px){
-	body.single-project .nexus-container {
-		padding-top: 30px;
-	}
+	
 }
 
 

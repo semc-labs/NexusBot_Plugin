@@ -96,7 +96,7 @@ class Nexus_Aurora_Bot_Public {
 	}
 
 	/**
-	 * Adds a default single view template for a job opening
+	 * Adds a default single view template
 	 *
 	 * @param 	string 		$template 		The name of the template
 	 * @return 	mixed 						The single template
@@ -109,7 +109,7 @@ class Nexus_Aurora_Bot_Public {
 
 		if ( $post->post_type == 'project' ) {
 
-			//$return = Nexus_Aurora_Globals::get_template( 'single-project' );
+			$return = Nexus_Aurora_Globals::get_template( 'single-project' );
 
 		}
 
@@ -121,7 +121,36 @@ class Nexus_Aurora_Bot_Public {
 
 		return $return;
 
-	} // single_cpt_template()
+	}
+
+
+	/**
+	 * Adds a default archive view template
+	 *
+	 * @param 	string 		$template 		The name of the template
+	 * @return 	mixed 						The archive template
+	 */
+	public function archive_cpt_template( $template ) {
+
+		global $post;
+
+		$return = $template;
+
+		if ( $post->post_type == 'project' ) {
+
+			$return = Nexus_Aurora_Globals::get_template( 'archive-project' );
+
+		}
+
+	    // if ( $post->post_type == 'file' ) {
+
+			// 	$return = Nexus_Aurora_Globals::get_template( 'single-file' );
+
+			// }
+
+		return $return;
+
+	}
 
 	/**
 	 * Shortcode for viewing a list of Google drive files
