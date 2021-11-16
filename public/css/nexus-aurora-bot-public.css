@@ -28,9 +28,59 @@
 	padding: 0 15px;
 }
 
-@media (min-width: 922px){
+@media (min-width: 992px){
 	.nexus-container {
 			max-width: 1240px;
+	}
+}
+
+
+/**
+ * NEXUS BOOTSTRAP
+ * If we build a whole theme we will probably just use bootstrap. For now we will just have a custom bootstrap like classes to avoid importing the whole library
+ */
+.row {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.col {
+	padding: 0 15px;
+}
+
+.card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	min-width: 0;
+	word-wrap: break-word;
+	background-color: #fff;
+	background-clip: border-box;
+	border: 1px solid rgba(0,0,0,.125);
+	border-radius: 0.25rem;
+}
+
+.card .card-body {
+	padding: 15px;
+}
+
+.card .card-text {
+	margin: 0;
+}
+
+.mb-4 {
+	margin-bottom: 1.5em;
+}
+
+@media (min-width: 576px){
+	.col-sm-6 {
+		width: 50%;
+	}
+}
+
+@media (min-width: 992px){
+	.col-lg-4 {
+		width: 33.33%;
 	}
 }
 
@@ -134,6 +184,65 @@
 /**
  * PROJECTS
  */
+
+/* ARCHIVE */
+#project-archive {
+	 display: flex;
+}
+
+#project-archive__menu {
+	width: 256px;
+	padding: 15px;
+	margin: 30px 0;
+}
+
+#project-archive__menu ul {
+	margin: 0;
+	list-style: none;
+}
+
+#project-archive__menu ul li label {
+	cursor: pointer;
+	padding: 0 15px;
+	margin-bottom: 5px;
+	font-weight: bold;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+#project-archive__menu ul li label input {
+	cursor: pointer;
+	margin-left: auto;
+	transform: scale(1.5);
+}
+
+
+@media (max-width: 767px){
+	#project-archive {
+		flex-direction: column;
+ }
+
+	#project-archive__menu {
+		width: 100%;
+	}
+}
+
+
+
+#project-archive__listing {
+	flex: 1;
+	padding: 30px 0;
+}
+
+#project-archive__listing .card {
+	border-radius: 50px;
+	height: 100%;
+}
+
+#project-archive__listing  .card-body {
+	line-height: 1.5;
+}
 
 
 body.single-project .ast-primary-header-bar {

@@ -152,6 +152,20 @@ class Nexus_Aurora_Bot_Public {
 
 	}
 
+	public function na_pre_get_posts( $query ) {
+    
+    if ( ! is_admin() && $query->is_main_query() ) {
+    
+        if ( is_post_type_archive( 'project' ) ) {
+            
+            $query->set('posts_per_page', -1 );
+						$query->set( 'order', 'ASC' );
+						$query->set( 'orderby', 'title' );
+    
+        }
+    }
+}
+
 	/**
 	 * Shortcode for viewing a list of Google drive files
 	 *
