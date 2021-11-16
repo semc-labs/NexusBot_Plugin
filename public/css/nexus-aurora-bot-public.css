@@ -115,6 +115,14 @@
 	justify-content: flex-end;
 }
 
+#nexus-header .ast-builder-layout-element {
+	display: none;
+}
+
+.main-header-bar-navigation {
+	display: none;
+}
+
 #nexus-header #menu-main li a {
 	font-family: 'Montserrat',sans-serif;
 	font-weight: bold;
@@ -124,6 +132,21 @@
 	padding: 0 1em;
 }
 
+@media (max-width: 921px){
+	#nexus-header #menu-main {
+		display: none;
+	}
+
+	#nexus-header .ast-builder-layout-element {
+		margin-left: auto;
+		display: block;
+	}
+
+	.ast-main-header-nav-open.ast-header-break-point .ast-mobile-header-wrap .ast-mobile-header-content {
+    display: block;
+	}
+
+}
 
 /**
  * NEXUS FEATURED
@@ -234,7 +257,7 @@
 
 #project-archive__listing {
 	flex: 1;
-	padding: 30px 0;
+	padding: 50px 0;
 }
 
 #project-archive__listing .card {

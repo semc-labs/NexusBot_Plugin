@@ -61,7 +61,7 @@ $featured_image_url = get_the_post_thumbnail_url( $project_page->ID, 'full' );
 
 					echo '<div class="projects col col-sm-6 col-lg-4 mb-4 '.$cat_string.'">
 									<a href="'.get_the_permalink($post->ID).'" class="card text-center">
-										<img src="'.$project_image_url.'" class="card-img-top" alt="">
+										<img src="'.$project_image_url.'" class="card-img-top lazyloaded" alt="" loading="lazy">
 										<div class="card-body">
 											<h5 class="card-title">'.$post->post_title.'</h5>
 											<p class="card-text">'.($fields['description']??'').'</p>

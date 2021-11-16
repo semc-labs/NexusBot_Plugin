@@ -28,5 +28,17 @@
 	 * Although scripts in the WordPress core, Plugins and Themes may be
 	 * practising this, we should strive to set a better example in our own work.
 	 */
-
+	
+	 $(function() {
+		// We are replicating the astra menu functionality. This can be removed / updated when we update the entire menu
+		var $menuToggle = $('.main-header-menu-toggle');
+		var $mobileMenu = $('.main-header-bar-navigation');
+		var $body = $('body');
+		$menuToggle.click(function (e) {
+			console.log('Menu Toggle Clicked');
+			$(this).toggleClass('toggled');
+			$mobileMenu.toggleClass('toggle-on').toggle();
+			$body.toggleClass('ast-main-header-nav-open');
+		});
+	});
 })( jQuery );
