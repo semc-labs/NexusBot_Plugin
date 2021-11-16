@@ -172,6 +172,8 @@ class Nexus_Aurora_Bot_Public {
 	 * @param array $atts An array of attributes used to build the viewer
 	 * @atts[id] The folder ID of the folder to view
 	 * @return void
+	 * 
+	 * @link https://developers.google.com/drive/api/v3/quickstart/js
 	 */
 	public function na_drive_folder($atts) {
 		if(empty($atts['id'])) return;
@@ -219,7 +221,13 @@ class Nexus_Aurora_Bot_Public {
 		$clock_svg = '<i class="fas fa-fw fa-clock"></i>';// include $plugin_url . 'images/fontawesome/clock-regular.php';
 		$marker_svg = '<i class="fas fa-fw fa-map-marker"></i>';// include $plugin_url . 'images/fontawesome/map-marker-regular.php';
 
-		
+		/*
+		<div class="calendar-widget__integrate">
+			<a class="calendar-widget__google" href="'.$add_google_calendar.'" target="_blank">'.$google_svg.' Add to Google</a>
+			<a class="calendar-widget__apple" href="'.$add_apple_calendar.'" target="_blank">'.$apple_svg.' Add to Apple</a>
+			<a class="calendar-widget__ical" href="'.$ics_link.'" download>'.$download_svg.' Download</a>
+		</div>
+		*/
 
 		$calender_image = 'https://ssl.gstatic.com/calendar/images/dynamiclogo_2020q4/calendar_10_2x.png';
 
@@ -232,11 +240,6 @@ class Nexus_Aurora_Bot_Public {
 											<a class="calendar-widget__google-link" href="https://calendar.google.com/" target="_blank">
 												<img src="'.$calender_image.'" alt="Google Calendar"/> Calendar
 											</a>
-											<div class="calendar-widget__integrate">
-												<a class="calendar-widget__google" href="'.$add_google_calendar.'" target="_blank">'.$google_svg.' Add to Google</a>
-												<a class="calendar-widget__apple" href="'.$add_apple_calendar.'" target="_blank">'.$apple_svg.' Add to Apple</a>
-												<a class="calendar-widget__ical" href="'.$ics_link.'" download>'.$download_svg.' Download</a>
-											</div>
 										</div>';
 
 		$widgetBody = '<div class="calendar-widget__body">
@@ -305,7 +308,7 @@ class Nexus_Aurora_Bot_Public {
 	 * ! NOTE: I don't love this. But other solutions will involve JS. Which we could do if needed. 
 	 */
 	public function get_user_location(){
-		$ip     = $_SERVER['REMOTE_ADDR']; 
+		$ip = $_SERVER['REMOTE_ADDR']; 
 		if($ip === '127.0.0.1'){
 			// for local testing let's just assume a default IP
 			$ip = '69.131.85.114';
@@ -325,59 +328,59 @@ class Nexus_Aurora_Bot_Public {
 	public function na_discord($atts){
 		if(empty($atts['channelid'])) return;
 
-		$nexusbot_url = get_option('nexusbot_url');
-		$request = wp_remote_get($nexusbot_url.'/online?channelId='.$atts['channelid']);
-		$channelInfo = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
+		//$nexusbot_url = get_option('nexusbot_url');
+		//$request = wp_remote_get($nexusbot_url.'/online?channelId='.$atts['channelid']);
+		//$channelInfo = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
 
+		/* <span><strong>'.$channelInfo['onlineMembers'].'</strong> Members Online</span> */
 		$widgetHeader = '<div class="discord-widget__header">
-											<a class="dicord-widget__discord" href="https://discord.com" target="_blank"></a>
+											<a class="dicord-widget__discord" href="'.$atts['invite'].'" target="_blank"></a>
 											<div>
-												<span><strong>'.$channelInfo['onlineMembers'].'</strong> Members Online</span>
-												'.(! empty($atts['invite']) ? '<a class="dicord-widget__join" href="'.$atts['invite'].'">Join Project Channel</a>':'').'
+												'.(! empty($atts['invite']) ? '<a class="dicord-widget__join" href="'.$atts['invite'].'" target="_blank">Join Project Channel</a>':'').'
 											</div>
 										</div>';
 
-		$widgetBody = '<div class="discord-widget__body">
-								<div class="discord-widget__channels">
-									<div class="dicord-widget__channel">
-										<div class="dicord-widget__channel__name">'.$channelInfo['messages']['channel'].'</div>
-									</div>
-								</div>';
+		// $widgetBody = '<div class="discord-widget__body">
+		// 						<div class="discord-widget__channels">
+		// 							<div class="dicord-widget__channel">
+		// 								<div class="dicord-widget__channel__name">'.$channelInfo['messages']['channel'].'</div>
+		// 							</div>
+		// 						</div>';
 
-		if(! empty($channelInfo['messages']['messages'])){
-			//$channelInfo['messages']['messages'] = array_reverse($channelInfo['messages']['messages']);
+		// if(! empty($channelInfo['messages']['messages'])){
+		// 	//$channelInfo['messages']['messages'] = array_reverse($channelInfo['messages']['messages']);
 
-			$widgetBody .= '<div class="discord-widget__channel-messages">';
+		// 	$widgetBody .= '<div class="discord-widget__channel-messages">';
 
-			foreach($channelInfo['messages']['messages'] as $message){
-				$widgetBody .= '<div class="discord-widget__channel-messages__message">';
+		// 	foreach($channelInfo['messages']['messages'] as $message){
+		// 		$widgetBody .= '<div class="discord-widget__channel-messages__message">';
 
-				$widgetBody .= '<div class="discord-widget__channel-messages__avatar"><img src="'.$message['avatar'].'" alt=""/></div>';
-				$widgetBody .= '<div class="discord-widget__channel-messages__content">
-													<strong>'.$message['username'].' <span>'.date('F j, Y @ g:ia', strtotime($message['date'])).'</span></strong>
-													<div>'.$message['message'].'</div>
-												</div>';
+		// 		$widgetBody .= '<div class="discord-widget__channel-messages__avatar"><img src="'.$message['avatar'].'" alt=""/></div>';
+		// 		$widgetBody .= '<div class="discord-widget__channel-messages__content">
+		// 											<strong>'.$message['username'].' <span>'.date('F j, Y @ g:ia', strtotime($message['date'])).'</span></strong>
+		// 											<div>'.$message['message'].'</div>
+		// 										</div>';
 
-				$widgetBody .= '</div>';
-			}
+		// 		$widgetBody .= '</div>';
+		// 	}
 
-			$widgetBody .= '</div>';
-		}
+		// 	$widgetBody .= '</div>';
+		// }
 
-		$widgetBody .= '</div>';
+		// $widgetBody .= '</div>';
 
-		$widgetHTML = '<div id="na-discord-widget">'.$widgetHeader.$widgetBody.'</div>';
+		$widgetHTML = '<div id="na-discord-widget">'.$widgetHeader.'</div>'; // .$widgetBody
 		
-		$data = array(
-			'hideChannels' => ['🔊meeting-room-voice-1'],
-			'theme' => 'dark',
-			'id' => '731855215816343592'
-		);
-		$query_vars = http_build_query($data);
+		// $data = array(
+		// 	'hideChannels' => ['🔊meeting-room-voice-1'],
+		// 	'theme' => 'dark',
+		// 	'id' => '731855215816343592'
+		// );
+		// $query_vars = http_build_query($data);
 
-		$widgetIFrame = '<iframe src="https://discord.com/widget?'.$query_vars.'" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>';
+		//$widgetIFrame = '<iframe src="https://discord.com/widget?'.$query_vars.'" width="350" height="500" allowtransparency="true" frameborder="0" sandbox="allow-popups allow-popups-to-escape-sandbox allow-same-origin allow-scripts"></iframe>';
 		
-		return $widgetHTML.$widgetIFrame;
+		return $widgetHTML;//.$widgetIFrame;
 	}
 
 

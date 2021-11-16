@@ -1,105 +1,77 @@
 <?php
 /**
- * The template for displaying all projects posts.
- *
- * @link https://developer.wordpress.org/themes/basics/template-hierarchy/#single-post
+ * The template for displaying projects archive.
  *
  * @package Nexus_Aurora
  */
 
 if ( ! defined( 'ABSPATH' ) ) { exit; } // Exit if accessed directly
 
-$meta = get_post_custom( $post->ID );
-if(function_exists('get_fields')){
-	$fields = get_fields( $post->ID );
-}
-
-get_header();
+get_header('nexus');
 the_post();
-wp_enqueue_script( 'babylon', 'https://cdn.babylonjs.com/viewer/babylon.viewer.js');
+
+$featured_image_url = get_the_post_thumbnail_url( $post->ID, 'full' );
+
 ?>
-<div class="nexus-container">
+<div id="project-single" />
+	<div id="nexus-featured">
+		<div class="nexus-container">
+			<div class="row align-center">
+				<div class="col"><img src="<?php echo $featured_image_url; ?>" width="200" alt="" /></div>
+				<div class="col "><h1><?php echo $post->post_title; ?></h1></div>
+			</div>
+		</div>
+	</div>
+	<div class="nexus-container row">
+		<div id="project-single__menu" class="col-lg-4">
 
-<?php
-	echo '<h2 class="text-center">'.$post->post_title.'</h2>';
+		<div class="social">
+			<a href="http://www.facebook.com/sharer/sharer.php?u=<?php echo $URL;?>&picture=<?php echo $featured_image_url; ?>" target="_blank"><i class="fa fa-facebook-square"></i></a>
+			<a href="https://twitter.com/share?text=<?php echo $post->post_title;?>&url=<?php echo $URL;?>" target="_blank"><i class="fa fa-twitter-square"></i></a>
+			<a href="https://www.linkedin.com/shareArticle?url=<?php echo $URL;?>&title=<?php echo $post->post_title;?>" target="_blank"><i class="fab fa-linkedin"></i></a>
+			<a href="https://www.reddit.com/submit?url=<?php echo $URL;?>&title=<?php echo $post->post_title;?>" target="_blank"><i class="fab fa-reddit"></i></a>
+			<a href="mailto:?subject=<?php echo $post->post_title;?>&body=<?php echo $URL;?>" target="_blank"><i class="fas fa-envelope"></i></a>
+		</div>
 
-	the_content();
+			<?php 
+				
+				echo do_shortcode( '[na-discord channelid="866066557331570710" invite="https://discord.gg/wP2N4WYANQ"][/na-discord]' );
 
-	if(! empty($fields['3d_files'])){
+				$arr = array(
+					'post_parent'    => $post->ID,
+					'post_type'      => 'project',
+				);
+			
+				$child_projects = get_children($arr);
 
-		echo '<div id="viewer-wrapper">
-				<babylon id="babylon-viewer"  model="'.$fields['3d_files'][0]['file']['url'].'" templates.main.params.fill-screen="true">
-					<scene debug="false" render-in-background="true" disable-camera-control="false">
-						<main-color r="0.5" g="0.3" b="0.3"></main-color>
-						<image-processing-configuration color-curves-enabled="true" exposure="1" contrast="1">
-							<color-curves global-hue="5">
-							</color-curves>
-						</image-processing-configuration>
-					</scene>
-					<lab>
-						<default-rendering-pipeline grain-enabled="false" sharpen-enabled="true" glow-layer-enabled="false" bloom-enabled="false" bloom-threshold="2.0">
-						</default-rendering-pipeline>
-					</lab>
-				</babylon>
-			</div>';
+				if(! empty($child_projects)){
+					echo '<ul>';
+					foreach($child_projects as $child_project){
+						echo '<li>
+										<a href="'.get_the_permalink($child_project->ID).'">
+										'.$child_project->post_title.'
+										</a>
+									</li>';
+					}
+					echo '</ul>';
+				}
 
-		// TODO: Get bootstrap or something and turn these into cards? Or some other more responsive layout
-		// echo '<table>
-		// 		<thead>
-		// 			<tr>
-		// 				<th>Name</th>
-		// 				<th>Size</th>
-		// 				<th>View</th>
-		// 				<th>Download</th>
-		// 			</tr>
-		// 		</thead>
-		// 		<tbody>';
+				echo do_shortcode( '[na-calendar calendarid="jboullion85@gmail.com" apikey="AIzaSyCqKZfmB9zsw74xh1ScF0P8EN980_aJzFQ" search="event"][/na-calendar]' );
+				echo do_shortcode( '[na-drive-folder id="1XeCYXUdkiad1QFmwTbKbUJsTu3xiVPKn"][/na-drive-folder]' );
 
-		echo '<h3>Available Files</h3>';
-
-		echo '<div class="download-list">';
-
-		foreach($fields['3d_files'] as $file){
-			// echo '<tr>
-			// 		<td>'.$file['file']['title'].'</td>
-			// 		<td class="text-center">'.Nexus_Aurora_Globals::convert_bytes( $file['file']['filesize'] ).'</td>
-			// 		<td class="text-center"><a href="'.$file['file']['url'].'" class="view-model" >View</a></td>
-			// 		<td class="text-center"><a href="'.$file['file']['url'].'" download>Download</a></td>
-			// 	</tr>';
-
-			echo '<div class="download">
-					<h6>'.$file['file']['title'].'</h6>
-					<div class="download-info">
-						<span>'.Nexus_Aurora_Globals::convert_bytes( $file['file']['filesize'] ).'</span>
-						<a href="'.$file['file']['url'].'" class="view-model" >View</a>
-						<a href="'.$file['file']['url'].'" download>Download</a>
-					</div>
-				</div>';
-		}
-
-		echo '</div>';
-
-		//echo '</tbody></table>';
-
-	}
-?>
+			?>
+		</div>
+		<div id="project-single__content">
+			<?php 
+				the_content();
+			?>
+		</div>
+	</div>
 </div>
-<?php if(! empty($fields['3d_files'])): ?>
 <script>
-	(function($) {
-		$(window).on('load', function() {
-			BabylonViewer.viewerManager.getViewerPromiseById('babylon-viewer').then(function (viewer) {
-				$('.view-model').click(function(e){
-					e.preventDefault();
-					
-					viewer.loadModel({
-						url: $(this).attr('href')
-					});
-				});
-			});
-		});
-	})( jQuery );
+	jQuery(function($) {
+		
+	});
 </script>
-<?php endif; ?>
 <?php 
-get_footer();
+get_footer('nexus');
