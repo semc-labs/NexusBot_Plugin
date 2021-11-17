@@ -11,6 +11,12 @@
 	align-items: center;
 }
 
+.ellipsis {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	overflow: hidden;
+}
+
 .site-content {
 	position: relative;
 }
@@ -412,7 +418,7 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
  * NA Viewer
  */
 #na-viewer-list #viewer-wrapper {
-	margin: 50px 0;
+	margin: 50px 0 20px;
 }
 
 #na-viewer-list .download-list {
@@ -443,9 +449,6 @@ body.single-project .ast-button-wrap .mobile-menu-toggle-icon .ast-mobile-svg {
 
 #na-viewer-list .download-list .download h6 {
 	flex: 1;
-	text-overflow: ellipsis;
-	white-space: nowrap;
-	overflow: hidden;
 }
 
 #na-viewer-list .download-list .download-info a,

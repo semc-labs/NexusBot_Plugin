@@ -211,7 +211,7 @@ class Nexus_Aurora_Bot_Public {
 		if(! empty($folder_info['items'])){
 
 			foreach($folder_info['items'] as $file){
-				$widgetBody .= '<a href="'.$file['alternateLink'].'" target="_blank" class="drive-widget__file">';
+				$widgetBody .= '<a href="'.$file['alternateLink'].'" target="_blank" class="drive-widget__file ellipsis">';
 				$widgetBody .= '<img src="'.$file['iconLink'].'" alt="" /> <strong class="file-title">'.$file['title'].'</strong>';
 				$widgetBody .= '</a>';
 			}
@@ -321,7 +321,7 @@ class Nexus_Aurora_Bot_Public {
 				}
 
 				//$widgetBody .= '<div class="calendar-widget__event__avatar"><img src="'.$message['avatar'].'" alt=""/></div>';
-				$widgetBody .= '<strong class="event-title">'.$event['summary'].'</strong>
+				$widgetBody .= '<strong class="event-title ellipsis">'.$event['summary'].'</strong>
 												<div class="event-date">'.$clock_svg.' '.$start_time.' - '.$end_time.'</div>
 												'.($event['location']?'<div class="event-location">'.$marker_svg.' '.$event['location'].'</div>':'').'
 												';
@@ -518,7 +518,7 @@ class Nexus_Aurora_Bot_Public {
 
 		foreach($fields['3d_files'] as $file){
 			$list_html .= '<li class="download">
-							<h6>'.($file['title'] ?: $file['file']['title']).'</h6>
+							<h6 class="ellipsis">'.($file['title'] ?: $file['file']['title']).'</h6>
 							<div class="download-info">
 								<span>'.Nexus_Aurora_Globals::convert_bytes( $file['file']['filesize'] ).'</span>
 								<a href="'.$file['file']['url'].'" class="view-model" ><i class="fas fa-eye"></i></a>
