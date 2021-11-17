@@ -39,6 +39,9 @@ class Nexus_Aurora_Bot_Public {
 	 */
 	private $version;
 
+
+	private $google_client;
+
 	/**
 	 * Initialize the class and set its properties.
 	 *
@@ -184,141 +187,44 @@ class Nexus_Aurora_Bot_Public {
 	 */
 	public function na_drive_folder($atts) {
 		if(empty($atts['id'])) return;
+		
+		$api_key = get_field('google_api_key', 'option');
+		$drive_query = "https://www.googleapis.com/drive/v2/files?q='".$atts['id']."'+in+parents&key=".$api_key;
+		$request = wp_remote_get($drive_query);
+		// Google Drive api v3. Seems to require billing signup, but SHOULD be free. Not currently working despite billing being setup
+		// https://www.googleapis.com/drive/v3/files?q=%22AIzaSyCqKZfmB9zsw74xh1ScF0P8EN980_aJzFQ%22+in+parents&fields=files(*)
+		$folder_info = json_decode( wp_remote_retrieve_body( $request ), ARRAY_A);
 
 		$drive_image = 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png';
 
-		$widgetHeader = '<div class="calendar-widget__header">
-				<a class="calendar-widget__google-link" href="https://calendar.google.com/" target="_blank">
-					<img src="'.$drive_image.'" alt="Google Calendar"/> Drive
+		$widgetHeader = '<div class="drive-widget__header">
+				<a class="drive-widget__google-link" href="https://drive.google.com/" target="_blank">
+					<img src="'.$drive_image.'" alt="Google"/> Drive
 				</a>
 			</div>';
 
-		$widgetBody = '<div class="calendar-widget__body">
-										<div class="calendar-widget__events">
-											<iframe src="https://drive.google.com/embeddedfolderview?id='.$atts['id'].'#list" style="width:100%; height:300px; border:0;"></iframe>
-										</div>
-									</div>';
+		// <iframe src="https://drive.google.com/embeddedfolderview?id='.$atts['id'].'#list" style="width:100%; height:300px; border:0;"></iframe>
 
-$widgetBody .= <<<EOT
-<button id="authorize_button" style="display: none;">Authorize</button>
-<script type="text/javascript">
-	// Client ID and API key from the Developer Console
-	var CLIENT_ID = '70378406002-i6fvvj0delrqej1s527da3edod0rlnir.apps.googleusercontent.com';
-	var API_KEY = 'AIzaSyBaLrvmvxH8ZAeMKjq-999gGvBq-Dp4a8k';
+		$widgetBody = '<div class="drive-widget__body">
+										<div class="drive-widget__files">';
+		
+		if(! empty($folder_info['items'])){
 
-	// Array of API discovery doc URLs for APIs used by the quickstart
-	var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
-
-	// Authorization scopes required by the API; multiple scopes can be
-	// included, separated by spaces.
-	var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
-
-	var authorizeButton = document.getElementById('authorize_button');
-	var signoutButton = document.getElementById('signout_button');
-
-	/**
-	 *  On load, called to load the auth2 library and API client library.
-	 */
-	function handleClientLoad() {
-		gapi.load('client:auth2', initClient);
-	}
-
-	/**
-	 *  Initializes the API client library and sets up sign-in state
-	 *  listeners.
-	 */
-	function initClient() {
-		gapi.client.init({
-			apiKey: API_KEY,
-			clientId: CLIENT_ID,
-			discoveryDocs: DISCOVERY_DOCS,
-			scope: SCOPES
-		}).then(function () {
-			// Listen for sign-in state changes.
-			gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
-
-			// Handle the initial sign-in state.
-			updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
-			authorizeButton.onclick = handleAuthClick;
-			signoutButton.onclick = handleSignoutClick;
-		}, function(error) {
-			appendPre(JSON.stringify(error, null, 2));
-		});
-	}
-
-	/**
-	 *  Called when the signed in status changes, to update the UI
-	 *  appropriately. After a sign-in, the API is called.
-	 */
-	function updateSigninStatus(isSignedIn) {
-		if (isSignedIn) {
-			authorizeButton.style.display = 'none';
-			signoutButton.style.display = 'block';
-			listFiles();
-		} else {
-			authorizeButton.style.display = 'block';
-			signoutButton.style.display = 'none';
-		}
-	}
-
-	/**
-	 *  Sign in the user upon button click.
-	 */
-	function handleAuthClick(event) {
-		gapi.auth2.getAuthInstance().signIn();
-	}
-
-	/**
-	 *  Sign out the user upon button click.
-	 */
-	function handleSignoutClick(event) {
-		gapi.auth2.getAuthInstance().signOut();
-	}
-
-	/**
-	 * Append a pre element to the body containing the given message
-	 * as its text node. Used to display the results of the API call.
-	 *
-	 * @param {string} message Text to be placed in pre element.
-	 */
-	function appendPre(message) {
-		var pre = document.getElementById('content');
-		var textContent = document.createTextNode(message + '\n');
-		pre.appendChild(textContent);
-	}
-
-	/**
-	 * Print files.
-	 */
-	function listFiles() {
-		gapi.client.drive.files.list({
-			'pageSize': 10,
-			'fields': "nextPageToken, files(id, name)"
-		}).then(function(response) {
-			appendPre('Files:');
-			var files = response.result.files;
-			if (files && files.length > 0) {
-				for (var i = 0; i < files.length; i++) {
-					var file = files[i];
-					appendPre(file.name + ' (' + file.id + ')');
-				}
-			} else {
-				appendPre('No files found.');
+			foreach($folder_info['items'] as $file){
+				$widgetBody .= '<a href="'.$file['alternateLink'].'" target="_blank" class="drive-widget__file">';
+				$widgetBody .= '<img src="'.$file['iconLink'].'" alt="" /> <strong class="file-title">'.$file['title'].'</strong>';
+				$widgetBody .= '</a>';
 			}
-		});
-	}
 
-</script>
+		}
 
-<script async defer src="https://apis.google.com/js/api.js"
-	onload="this.onload=function(){};handleClientLoad()"
-	onreadystatechange="if (this.readyState === 'complete') this.onload()">
-</script>
-EOT;
+		$widgetBody .= '</div>
+									</div>';
 		
-		return '<div id="na-calendar-widget">'. $widgetHeader . $widgetBody .'</div>'; 
+		return '<div id="na-drive-widget">'. $widgetHeader . $widgetBody .'</div>'; 
 		
 	}
+	
 
 	/**
 	 * Display a Google Calendar Widger
@@ -327,22 +233,16 @@ EOT;
 	 * @atts[calendarid] The calendar id of the calendar get events from. aka the email address
 	 * @atts[apkikey] ??? The apikey connected to the email address to authorize querying events. 
 	 * @atts[q] Query string to search events by
-	 * TODO: Implement the apikey differently. If all events are from one calendar, set that calednars API globally
+	 
 	 * ? NOTE: Possibly pass in a "calendar" name which can match an array of API Keys if we have multiple calendars 
 	 * @link https://developers.google.com/calendar/api/v3/reference/events/list
 	 */
  	public function na_calendar($atts) {
 
 		if(empty($atts['filter'])) return;
-		//if(empty($atts['calendarid']) || empty($atts['apikey'])) return;
 
-		// Move these to a safe location OR have them set in the $atts? Not very safe that way, but much more configurable.
-		// Could potentially also set an API Key in an ACF field...not much safer
-		//$calendar_id = $atts['calendarid'];
-		$calendar_id = "jboullion85@gmail.com"; // TODO: Get the Email of the shared NA account
-
-		//$api_key = $atts['apikey'];
-		$api_key = "AIzaSyCqKZfmB9zsw74xh1ScF0P8EN980_aJzFQ"; // TODO: Get the API key of the shared NA account
+		$calendar_id = get_field('google_email', 'option');
+		$api_key = get_field('google_api_key', 'option');
 		$today = date("Y-m-d\TH:i:s\Z"); // NOTE: In testing I could only get this to work by passing "Z" as the timezone.
 
 		$calendar_link = 'https://www.googleapis.com/calendar/v3/calendars/'.$calendar_id.'/events?maxResults=10&orderBy=startTime&singleEvents=true&timeMin='.$today.'&key='.$api_key;
@@ -379,7 +279,7 @@ EOT;
 
 		$widgetHeader = '<div class="calendar-widget__header">
 											<a class="calendar-widget__google-link" href="https://calendar.google.com/" target="_blank">
-												<img src="'.$calender_image.'" alt="Google Calendar"/> Calendar
+												<img src="'.$calender_image.'" alt="Google"/> Calendar
 											</a>
 										</div>';
 

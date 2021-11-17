@@ -105,6 +105,12 @@ class Nexus_Aurora_Bot_Admin {
 		// Table helper
 		require plugin_dir_path( __FILE__ ) . 'includes/class-nexus-table.php';
 
+		if( function_exists('acf_add_options_page') ) {
+	
+			acf_add_options_page();
+			
+		}
+
 		// add_menu_page( $page_title, $menu_title, $capability, $menu_slug, $function, $icon_url, $position );
 		add_menu_page( "Nexus Bot", "Nexus Bot", 'edit_posts', $this->plugin_name, array( $this, 'page_dashboard' ), 'dashicons-buddicons-buddypress-logo');
 		add_submenu_page(
