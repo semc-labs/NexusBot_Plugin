@@ -78,20 +78,27 @@ class Nexus_Aurora_Bot_Public {
 
 	
 	function alter_the_content($content){
-		$icon_url = plugin_dir_url( __FILE__ ).'images/icons';
-		$icon_dir = plugin_dir_path( __FILE__ ).'images/icons';
-		$icons = scandir($icon_dir);
-		
-		if($icons && is_array($icons)){
-			
-			// clean our content by spacing out our icons
-			$content = preg_replace("/:(\D*)::/", ':$1: :', $content);
+		global $post;
 
-			foreach($icons as $icon_file){
-				$icon_name = pathinfo($icon_file, PATHINFO_FILENAME);				
-				$content = str_replace(":$icon_name:", '<img src="'.$icon_url.'/'.$icon_file.'"  draggable="false" role="img" width="24" alt="" />', $content);
+		$content = preg_replace("/<p>(<iframe .*<\/iframe>)<\/p>/m", '<div class="iframe-container">$1</div>', $content);
+
+		if($post->type === 'post'){
+			$icon_url = plugin_dir_url( __FILE__ ).'images/icons';
+			$icon_dir = plugin_dir_path( __FILE__ ).'images/icons';
+			$icons = scandir($icon_dir);
+			
+			if($icons && is_array($icons)){
+				
+				// clean our content by spacing out our icons
+				$content = preg_replace("/:(\D*)::/", ':$1: :', $content);
+
+				foreach($icons as $icon_file){
+					$icon_name = pathinfo($icon_file, PATHINFO_FILENAME);				
+					$content = str_replace(":$icon_name:", '<img src="'.$icon_url.'/'.$icon_file.'"  draggable="false" role="img" width="24" alt="" />', $content);
+				}
 			}
 		}
+
 		return $content;
 	}
 
@@ -178,8 +185,139 @@ class Nexus_Aurora_Bot_Public {
 	public function na_drive_folder($atts) {
 		if(empty($atts['id'])) return;
 
-		return '<iframe src="https://drive.google.com/embeddedfolderview?id='.$atts['id'].'#list" style="width:100%; height:300px; border:0;"></iframe>';
+		$drive_image = 'https://ssl.gstatic.com/images/branding/product/1x/drive_2020q4_48dp.png';
 
+		$widgetHeader = '<div class="calendar-widget__header">
+				<a class="calendar-widget__google-link" href="https://calendar.google.com/" target="_blank">
+					<img src="'.$drive_image.'" alt="Google Calendar"/> Drive
+				</a>
+			</div>';
+
+		$widgetBody = '<div class="calendar-widget__body">
+										<div class="calendar-widget__events">
+											<iframe src="https://drive.google.com/embeddedfolderview?id='.$atts['id'].'#list" style="width:100%; height:300px; border:0;"></iframe>
+										</div>
+									</div>';
+
+$widgetBody .= <<<EOT
+<button id="authorize_button" style="display: none;">Authorize</button>
+<script type="text/javascript">
+	// Client ID and API key from the Developer Console
+	var CLIENT_ID = '70378406002-i6fvvj0delrqej1s527da3edod0rlnir.apps.googleusercontent.com';
+	var API_KEY = 'AIzaSyBaLrvmvxH8ZAeMKjq-999gGvBq-Dp4a8k';
+
+	// Array of API discovery doc URLs for APIs used by the quickstart
+	var DISCOVERY_DOCS = ["https://www.googleapis.com/discovery/v1/apis/drive/v3/rest"];
+
+	// Authorization scopes required by the API; multiple scopes can be
+	// included, separated by spaces.
+	var SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+
+	var authorizeButton = document.getElementById('authorize_button');
+	var signoutButton = document.getElementById('signout_button');
+
+	/**
+	 *  On load, called to load the auth2 library and API client library.
+	 */
+	function handleClientLoad() {
+		gapi.load('client:auth2', initClient);
+	}
+
+	/**
+	 *  Initializes the API client library and sets up sign-in state
+	 *  listeners.
+	 */
+	function initClient() {
+		gapi.client.init({
+			apiKey: API_KEY,
+			clientId: CLIENT_ID,
+			discoveryDocs: DISCOVERY_DOCS,
+			scope: SCOPES
+		}).then(function () {
+			// Listen for sign-in state changes.
+			gapi.auth2.getAuthInstance().isSignedIn.listen(updateSigninStatus);
+
+			// Handle the initial sign-in state.
+			updateSigninStatus(gapi.auth2.getAuthInstance().isSignedIn.get());
+			authorizeButton.onclick = handleAuthClick;
+			signoutButton.onclick = handleSignoutClick;
+		}, function(error) {
+			appendPre(JSON.stringify(error, null, 2));
+		});
+	}
+
+	/**
+	 *  Called when the signed in status changes, to update the UI
+	 *  appropriately. After a sign-in, the API is called.
+	 */
+	function updateSigninStatus(isSignedIn) {
+		if (isSignedIn) {
+			authorizeButton.style.display = 'none';
+			signoutButton.style.display = 'block';
+			listFiles();
+		} else {
+			authorizeButton.style.display = 'block';
+			signoutButton.style.display = 'none';
+		}
+	}
+
+	/**
+	 *  Sign in the user upon button click.
+	 */
+	function handleAuthClick(event) {
+		gapi.auth2.getAuthInstance().signIn();
+	}
+
+	/**
+	 *  Sign out the user upon button click.
+	 */
+	function handleSignoutClick(event) {
+		gapi.auth2.getAuthInstance().signOut();
+	}
+
+	/**
+	 * Append a pre element to the body containing the given message
+	 * as its text node. Used to display the results of the API call.
+	 *
+	 * @param {string} message Text to be placed in pre element.
+	 */
+	function appendPre(message) {
+		var pre = document.getElementById('content');
+		var textContent = document.createTextNode(message + '\n');
+		pre.appendChild(textContent);
+	}
+
+	/**
+	 * Print files.
+	 */
+	function listFiles() {
+		gapi.client.drive.files.list({
+			'pageSize': 10,
+			'fields': "nextPageToken, files(id, name)"
+		}).then(function(response) {
+			appendPre('Files:');
+			var files = response.result.files;
+			if (files && files.length > 0) {
+				for (var i = 0; i < files.length; i++) {
+					var file = files[i];
+					appendPre(file.name + ' (' + file.id + ')');
+				}
+			} else {
+				appendPre('No files found.');
+			}
+		});
+	}
+
+</script>
+
+<script async defer src="https://apis.google.com/js/api.js"
+	onload="this.onload=function(){};handleClientLoad()"
+	onreadystatechange="if (this.readyState === 'complete') this.onload()">
+</script>
+EOT;
+		
+		return '<div id="na-calendar-widget">'. $widgetHeader . $widgetBody .'</div>'; 
+		
 	}
 
 	/**
@@ -195,19 +333,22 @@ class Nexus_Aurora_Bot_Public {
 	 */
  	public function na_calendar($atts) {
 
-		if(empty($atts['calendarid'])
-		|| empty($atts['apikey'])) return;
+		if(empty($atts['filter'])) return;
+		//if(empty($atts['calendarid']) || empty($atts['apikey'])) return;
 
 		// Move these to a safe location OR have them set in the $atts? Not very safe that way, but much more configurable.
 		// Could potentially also set an API Key in an ACF field...not much safer
-		$calendar_id = $atts['calendarid'];
-		$api_key = $atts['apikey'];
+		//$calendar_id = $atts['calendarid'];
+		$calendar_id = "jboullion85@gmail.com"; // TODO: Get the Email of the shared NA account
+
+		//$api_key = $atts['apikey'];
+		$api_key = "AIzaSyCqKZfmB9zsw74xh1ScF0P8EN980_aJzFQ"; // TODO: Get the API key of the shared NA account
 		$today = date("Y-m-d\TH:i:s\Z"); // NOTE: In testing I could only get this to work by passing "Z" as the timezone.
 
 		$calendar_link = 'https://www.googleapis.com/calendar/v3/calendars/'.$calendar_id.'/events?maxResults=10&orderBy=startTime&singleEvents=true&timeMin='.$today.'&key='.$api_key;
 		
-		if($atts['search']) {
-			$calendar_link .= "&q=".$atts['search'];
+		if($atts['filter']) {
+			$calendar_link .= "&q=".$atts['filter'];
 		}
 		
 		$ics_link = 'https://calendar.google.com/calendar/ical/'.$calendar_id.'/public/basic.ics';
@@ -427,7 +568,7 @@ class Nexus_Aurora_Bot_Public {
 					</babylon>
 					<div class="download text-center">
 						'.($filesize?'<span>'.Nexus_Aurora_Globals::convert_bytes( $filesize ).'</span>':'').'
-						<a href="'.$atts['url'].'" download>Download</a>
+						<a href="'.$atts['url'].'" download><i class="fas fa-download"></i></a>
 					</div>
 				</div>';
 	}
@@ -472,22 +613,25 @@ class Nexus_Aurora_Bot_Public {
 				</babylon>
 			</div>';
 
-		$list_html .=  '<h3>Available Files</h3>';
-
 		$list_html .=  '<div class="download-list">';
+		$list_html .= '<ul>';
 
-		foreach($fields['3d_files'] as $file){	
-			$list_html .=  '<div class="download">
-					<h6>'.$file['file']['title'].'</h6>
-					<div class="download-info">
-						<span>'.Nexus_Aurora_Globals::convert_bytes( $file['file']['filesize'] ).'</span>
-						<a href="'.$file['file']['url'].'" class="view-model" >View</a>
-						<a href="'.$file['file']['url'].'" download>Download</a>
-					</div>
-				</div>';
+		foreach($fields['3d_files'] as $file){
+			$list_html .= '<li class="download">
+							<h6>'.($file['title'] ?: $file['file']['title']).'</h6>
+							<div class="download-info">
+								<span>'.Nexus_Aurora_Globals::convert_bytes( $file['file']['filesize'] ).'</span>
+								<a href="'.$file['file']['url'].'" class="view-model" ><i class="fas fa-eye"></i></a>
+								<a href="'.$file['file']['url'].'" download><i class="fas fa-download"></i></a>
+							</div>
+						</li>';
 		}
 
-		$list_html .=  '</div></div>';
+		$list_html .= '</ul>
+								</div>';
+
+
+		$list_html .=  '</div>';
 
 		$list_html .= <<<EOT
 <script>

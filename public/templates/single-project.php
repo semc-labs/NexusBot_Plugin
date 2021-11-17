@@ -12,6 +12,9 @@ the_post();
 
 $featured_image_url = get_the_post_thumbnail_url( $post->ID, 'full' );
 
+$fields = get_fields( $post->ID );
+
+$URL = get_the_permalink();
 ?>
 <div id="project-single" />
 	<div id="nexus-featured">
@@ -22,49 +25,67 @@ $featured_image_url = get_the_post_thumbnail_url( $post->ID, 'full' );
 			</div>
 		</div>
 	</div>
-	<div class="nexus-container row">
-		<div id="project-single__menu" class="col-lg-4">
+	<div class="nexus-container">
+		<div class="row">
+			<div id="project-single__content" class="col">
+				<?php 
+					the_content();
 
-		<div class="social">
-			<a href="http://www.facebook.com/sharer/sharer.php?u=<?php echo $URL;?>&picture=<?php echo $featured_image_url; ?>" target="_blank"><i class="fa fa-facebook-square"></i></a>
-			<a href="https://twitter.com/share?text=<?php echo $post->post_title;?>&url=<?php echo $URL;?>" target="_blank"><i class="fa fa-twitter-square"></i></a>
-			<a href="https://www.linkedin.com/shareArticle?url=<?php echo $URL;?>&title=<?php echo $post->post_title;?>" target="_blank"><i class="fab fa-linkedin"></i></a>
-			<a href="https://www.reddit.com/submit?url=<?php echo $URL;?>&title=<?php echo $post->post_title;?>" target="_blank"><i class="fab fa-reddit"></i></a>
-			<a href="mailto:?subject=<?php echo $post->post_title;?>&body=<?php echo $URL;?>" target="_blank"><i class="fas fa-envelope"></i></a>
-		</div>
-
-			<?php 
-				
-				echo do_shortcode( '[na-discord channelid="866066557331570710" invite="https://discord.gg/wP2N4WYANQ"][/na-discord]' );
-
-				$arr = array(
-					'post_parent'    => $post->ID,
-					'post_type'      => 'project',
-				);
-			
-				$child_projects = get_children($arr);
-
-				if(! empty($child_projects)){
-					echo '<ul>';
-					foreach($child_projects as $child_project){
-						echo '<li>
-										<a href="'.get_the_permalink($child_project->ID).'">
-										'.$child_project->post_title.'
-										</a>
-									</li>';
+					if(! empty($fields['3d_files'])){
+						echo do_shortcode( '[na-viewer-list][/na-viewer-list]' );
 					}
-					echo '</ul>';
-				}
+				?>
+			</div>
+			<div id="project-single__menu" class="col col-lg-4">
 
-				echo do_shortcode( '[na-calendar calendarid="jboullion85@gmail.com" apikey="AIzaSyCqKZfmB9zsw74xh1ScF0P8EN980_aJzFQ" search="event"][/na-calendar]' );
-				echo do_shortcode( '[na-drive-folder id="1XeCYXUdkiad1QFmwTbKbUJsTu3xiVPKn"][/na-drive-folder]' );
+				<div class="social">
+					<a class="facebook" href="http://www.facebook.com/sharer/sharer.php?u=<?php echo $URL;?>&picture=<?php echo $featured_image_url; ?>" target="_blank"><i class="fa fa-facebook-square"></i></a>
+					<a class="twitter" href="https://twitter.com/share?text=<?php echo $post->post_title;?>&url=<?php echo $URL;?>" target="_blank"><i class="fa fa-twitter-square"></i></a>
+					<a class="linkedin" href="https://www.linkedin.com/sharing/share-offsite/?url=<?php echo $URL;?>" target="_blank"><i class="fab fa-linkedin"></i></a>
+					<a class="reddit" href="https://www.reddit.com/submit?url=<?php echo $URL;?>&title=<?php echo $post->post_title;?>" target="_blank"><i class="fab fa-reddit"></i></a>
+					<a class="email" href="mailto:?subject=<?php echo $post->post_title;?>&body=<?php echo $URL;?>" target="_blank"><i class="fas fa-envelope"></i></a>
+				</div>
 
-			?>
-		</div>
-		<div id="project-single__content">
-			<?php 
-				the_content();
-			?>
+				<?php 
+					$arr = array(
+						'post_parent'    => $post->ID,
+						'post_type'      => 'project',
+						'orderby'				=> 'title',
+						'order'					=> 'ASC',
+					);
+				
+					$child_projects = get_children($arr);
+
+					if(! empty($child_projects)){
+						echo '<div class="child-projects">
+									<p>Related Projects</p>
+									<ul>';
+
+						foreach($child_projects as $child_project){
+							echo '<li>
+											<a href="'.get_the_permalink($child_project->ID).'">
+											'.$child_project->post_title.'
+											</a>
+										</li>';
+						}
+						echo '</ul>
+								</div>';
+					}
+
+					if(! empty($fields['channel_invite'])){
+						echo do_shortcode( '[na-discord channelid="'.$fields['channel_id'].'" invite="'.$fields['channel_invite'].'"][/na-discord]' );
+					}
+
+					if(! empty($fields['calendar_filter'])){
+						echo do_shortcode( '[na-calendar filter="'.$fields['calendar_filter'].'"][/na-calendar]' );
+					}
+
+					if(! empty($fields['folder_id'])){
+						echo do_shortcode( '[na-drive-folder id="'.$fields['folder_id'].'"][/na-drive-folder]' );
+					}
+
+				?>
+			</div>
 		</div>
 	</div>
 </div>
